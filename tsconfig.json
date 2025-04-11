@@ -1,7 +1,19 @@
 {
-  "files": [],
+  "files": [],                          // No specific files directly included
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+    { "path": "./tsconfig.app.json" },  // Refers to app-specific config
+    { "path": "./tsconfig.node.json" }  // Refers to config for Vite/node files
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]                // Alias `@` to the `src` folder
+    },
+    "noImplicitAny": false,             // Allows variables without types
+    "noUnusedParameters": false,        // Allow unused function args
+    "skipLibCheck": true,               // Skip type checking for external libraries
+    "allowJs": true,                    // Allow `.js` files in the project
+    "noUnusedLocals": false,            // Allow unused variables
+    "strictNullChecks": false           // `null` and `undefined` aren't strictly checked
+  }
 }

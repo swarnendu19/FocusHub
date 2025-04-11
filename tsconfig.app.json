@@ -1,26 +1,31 @@
 {
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo", // Caching info
+    "target": "ES2020",                   // Modern JavaScript output
+    "useDefineForClassFields": true,      // Better class field handling
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // Use modern JS and DOM APIs
+    "module": "ESNext",                   // Output modules in latest format
+    "skipLibCheck": true,                 // Skip library type checking
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
+    "moduleResolution": "bundler",        // Vite uses bundler-style resolution
+    "allowImportingTsExtensions": true,   // Allow `.ts` in import paths
+    "isolatedModules": true,              // Enforce file isolation (good for Vite)
+    "moduleDetection": "force",           // Treat all files as modules
+    "noEmit": true,                       // Don’t output compiled JS
+    "jsx": "react-jsx",                   // Use the new JSX transform
 
-    /* Linting */
+    /* Linting & Safety */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]                 // Support `@` path alias
+    }
   },
-  "include": ["src"]
+  "include": ["src"]                     // Only include files from `src/`
 }
