@@ -1,5 +1,4 @@
-import React from 'react';
-import Navbar from '@/components/layout/Navbar';
+import Navbar from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trophy, Medal, Users, Filter, Clock, Calendar, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
