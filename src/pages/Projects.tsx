@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Navbar from '@/components/layout/Navbar';
+import Navbar from '@/components/layout/Header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, FolderPlus, Code, Pencil, Book, FastForward } from 'lucide-react';
