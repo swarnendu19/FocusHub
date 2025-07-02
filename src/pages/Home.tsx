@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ActivityChart } from "@/components/ActivityChart";
+import ActivityTracker from "@/components/ActivityTracker";
 
 const Home = () => {
   const [time, setTime] = useState(0);
@@ -43,7 +44,7 @@ const Home = () => {
         <h1 className="text-3xl font-bold">Welcome back!</h1>
         <p className="text-muted-foreground">Ready to focus and achieve your goals?</p>
       </div>
-
+      <ActivityTracker/>
       {/* Focus Timer and Activity Overview */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Focus Timer */}

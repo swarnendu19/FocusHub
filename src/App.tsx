@@ -11,7 +11,7 @@ import Projects from "./pages/Projects";
 import XP from "./pages/XP";
 import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
-
+ 
 const queryClient = new QueryClient();
 
 const App = () => (
