@@ -4,11 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { Sidebar } from "@/components/Sidebar";
+import { Header } from "@/components/Header";
+import Home from "./pages/Home";
 import Projects from "./pages/Projects";
-import Timeline from "./pages/Timeline";
+import XP from "./pages/XP";
 import Leaderboard from "./pages/Leaderboard";
-import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,15 +20,23 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/timeline" element={<Timeline />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/pricing" element={<Pricing />} />
-           
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="dark min-h-screen bg-background">
+          <div className="flex min-h-screen w-full">
+            <Sidebar />
+            <div className="flex-1 flex flex-col lg:ml-[256px]">
+              <Header />
+              <main className="flex-1 p-6">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/xp" element={<XP />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+            </div>
+          </div>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
