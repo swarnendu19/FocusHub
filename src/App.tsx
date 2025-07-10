@@ -20,22 +20,17 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="dark min-h-screen bg-background">
-          <div className="flex min-h-screen w-full">
-            <Sidebar />
-            <div className="flex-1 flex flex-col lg:ml-[256px]">
-              <Header />
-              <main className="flex-1 p-6">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/projects" element={<Projects />} />
-                  <Route path="/xp" element={<XP />} />
-                  <Route path="/leaderboard" element={<Leaderboard />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-            </div>
-          </div>
+        <div className="min-h-screen w-full bg-[#131F24]">
+          <Header />
+          <main className="flex-1 w-full">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/xp" element={<XP />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
         </div>
       </BrowserRouter>
     </TooltipProvider>
