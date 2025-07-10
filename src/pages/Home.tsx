@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
  
 import FocusTimer from "@/components/Home/FocusTimer";
 import ActivityOverview from "@/components/Home/ActivityOverview";
+import WeeklyGoalProgress from "@/components/Home/WeeklyGoalProgress";
+import Projects from "./Projects";
 
 const Home = () => {
  
@@ -17,47 +19,34 @@ const Home = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Section */}
+    <div className="space-y-8 bg-[#131F24] min-h-screen py-6 px-2 md:px-8">
+      {/* Header is handled globally */}
+      {/* Focus Timer & Activity Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div><FocusTimer/></div>
+        <div><ActivityOverview/></div>
+      </div>
+      {/* Progress Bar */}
       <div>
-        <h1 className="text-3xl font-bold">Welcome back!</h1>
-        <p className="text-muted-foreground">Ready to focus and achieve your goals?</p>
+        <WeeklyGoalProgress/>
       </div>
-      {/* <ActivityTracker/> */}
-      {/* Focus Timer and Activity Overview */}
-      <div className="flex gap-6">
-        
-        <FocusTimer/>
- 
-        <ActivityOverview/>
-
-      </div>
-
-      {/* Progress to Next Badge */}
-      <Card>
+      {/* Recent Projects */}
+      <Card className="bg-[#1A2B32] border-none shadow-md">
         <CardHeader>
-          <CardTitle>Progress to Next Badge</CardTitle>
+          <CardTitle className="font-[din-round] text-[#58CC02] text-xl">Your Recent Projects</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">Focused Warrior</span>
-              <span className="text-sm text-muted-foreground">75/100 hours</span>
-            </div>
-            <Progress value={75} className="h-3" />
-            <p className="text-sm text-muted-foreground">25 more hours to unlock this badge!</p>
-          </div>
+          <Projects />
         </CardContent>
       </Card>
-
       {/* All Badges */}
-      <Card>
+      <Card className="bg-[#1A2B32] border-none shadow-md">
         <CardHeader>
-          <CardTitle>Your Badges</CardTitle>
+          <CardTitle className="font-[din-round] text-[#1CB0F6] text-xl">All Badges</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {badges.map((badge, index) => (
+            {badges.map((badge) => (
               <div 
                 key={badge.name} 
                 className={`p-4 rounded-lg border text-center transition-all hover:scale-105 ${
@@ -83,7 +72,6 @@ const Home = () => {
         </CardContent>
       </Card>
     </div>
-    
   );
 };
 
