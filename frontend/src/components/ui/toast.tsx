@@ -1,7 +1,8 @@
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
+import { X, CheckCircle, AlertCircle, Info, Star } from "lucide-react"
+import { motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
@@ -43,14 +44,51 @@ const toastVariants = cva(
 const Toast = React.forwardRef<
     React.ElementRef<typeof ToastPrimitives.Root>,
     React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
+    VariantProps<typeof toastVariants> & {
+        showIcon?: boolean
+    }
+>(({ className, variant, showIcon = true, ...props }, ref) => {
+    const getIcon = () => {
+        if (!showIcon) return null
+
+        switch (variant) {
+            case 'success':
+                return <CheckCircle className="h-5 w-5 text-white flex-shrink-0" />
+            case 'destructive':
+                return <AlertCircle className="h-5 w-5 text-white flex-shrink-0" />
+            case 'warning':
+                return <AlertCircle className="h-5 w-5 text-black flex-shrink-0" />
+            case 'xp':
+                return <Star className="h-5 w-5 text-black flex-shrink-0 animate-pulse" />
+            default:
+                return <Info className="h-5 w-5 text-gray-500 flex-shrink-0" />
+        }
+    }
+
     return (
-        <ToastPrimitives.Root
-            ref={ref}
-            className={cn(toastVariants({ variant }), className)}
-            {...props}
-        />
+        <motion.div
+            initial={{ opacity: 0, y: -50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -50, scale: 0.95 }}
+            transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 25
+            }}
+        >
+            <ToastPrimitives.Root
+                ref={ref}
+                className={cn(toastVariants({ variant }), className)}
+                {...props}
+            >
+                <div className="flex items-start gap-3 flex-1">
+                    {getIcon()}
+                    <div className="flex-1 min-w-0">
+                        {props.children}
+                    </div>
+                </div>
+            </ToastPrimitives.Root>
+        </motion.div>
     )
 })
 Toast.displayName = ToastPrimitives.Root.displayName

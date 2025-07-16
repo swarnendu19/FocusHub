@@ -17,6 +17,9 @@
   --color-streak: #FF6B35;
   --color-achievement: #9333EA;
 
+  /* Duolingo font family */
+  --font-din-round: 'DIN Round Pro', 'din-round', system-ui, -apple-system, sans-serif;
+
   /* Custom animations */
   --animate-glow: glow 2s ease-in-out infinite alternate;
   --animate-float: float 3s ease-in-out infinite;
@@ -24,10 +27,12 @@
   --animate-shake: shake 0.5s ease-in-out;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=DIN+Round+Pro:wght@300;400;500;700;900&display=swap');
+
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'DIN Round Pro', 'din-round', system-ui, -apple-system, sans-serif;
   background-color: #ffffff;
   color: #1f2937;
 }
@@ -49,6 +54,31 @@ html {
 
   .shadow-duolingo-active {
     box-shadow: 0 2px 0 0 #46A302;
+  }
+
+  /* Duolingo font utilities */
+  .font-din-round {
+    font-family: var(--font-din-round);
+  }
+
+  .font-din-round-light {
+    font-family: var(--font-din-round);
+    font-weight: 300;
+  }
+
+  .font-din-round-medium {
+    font-family: var(--font-din-round);
+    font-weight: 500;
+  }
+
+  .font-din-round-bold {
+    font-family: var(--font-din-round);
+    font-weight: 700;
+  }
+
+  .font-din-round-black {
+    font-family: var(--font-din-round);
+    font-weight: 900;
   }
 }
 
