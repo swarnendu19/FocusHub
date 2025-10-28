@@ -17,6 +17,9 @@ export interface User {
     isOptIn: boolean;
     tasksCompleted: number;
     unlockedBadges: string[];
+    skillPoints: number;
+    unlockedSkills: string[];
+    skillBonuses: SkillBonus[];
 }
 
 export interface UserPreferences {
@@ -37,6 +40,9 @@ export interface Task {
     xpReward: number;
     priority: 'low' | 'medium' | 'high';
     tags: string[];
+    deadline?: Date;
+    estimatedTime?: number; // in milliseconds
+    lastWorkedOn?: Date;
 }
 
 export interface Project {
@@ -121,6 +127,8 @@ export interface ApiResponse<T> {
     data?: T;
     error?: string;
     message?: string;
+    status?: number;
+    retryable?: boolean;
 }
 
 export interface PaginatedResponse<T> {
@@ -129,4 +137,48 @@ export interface PaginatedResponse<T> {
     page: number;
     limit: number;
     hasMore: boolean;
+}
+
+// Skill Tree Types
+export interface Skill {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    category: SkillCategory;
+    tier: number;
+    cost: number;
+    prerequisites: string[];
+    bonuses: SkillBonus[];
+    isUnlocked: boolean;
+    position: {
+        x: number;
+        y: number;
+    };
+}
+
+export interface SkillBonus {
+    type: 'xp_multiplier' | 'time_bonus' | 'streak_protection' | 'task_efficiency' | 'focus_boost';
+    value: number;
+    description: string;
+}
+
+export interface SkillCategory {
+    id: string;
+    name: string;
+    description: string;
+    color: string;
+    icon: string;
+}
+
+export interface SkillTree {
+    categories: SkillCategory[];
+    skills: Skill[];
+    connections: SkillConnection[];
+}
+
+export interface SkillConnection {
+    from: string;
+    to: string;
+    type: 'prerequisite' | 'synergy';
 }

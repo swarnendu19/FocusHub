@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     Home,
     FolderOpen,
@@ -8,9 +8,13 @@ import {
     Star,
     Menu,
     X,
-    User
+    User,
+    LogOut,
+    Settings,
+    ChevronDown
 } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 const navigationItems = [
     { name: 'Home', href: '/', icon: Home },
@@ -21,11 +25,40 @@ const navigationItems = [
 
 export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const location = useLocation();
+    const { user, logout, isLoading } = useAuth();
+    const userMenuRef = useRef<HTMLDivElement>(null);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
+
+    const toggleUserMenu = () => {
+        setIsUserMenuOpen(!isUserMenuOpen);
+    };
+
+    const handleLogout = async () => {
+        setIsUserMenuOpen(false);
+        await logout();
+    };
+
+    // Close user menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setIsUserMenuOpen(false);
+            }
+        };
+
+        if (isUserMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isUserMenuOpen]);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -89,12 +122,109 @@ export function Header() {
 
                     {/* User Profile & Mobile Menu Button */}
                     <div className="flex items-center space-x-2">
-                        {/* User Profile Button */}
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Button variant="ghost" size="sm" className="rounded-full p-2">
-                                <User size={20} className="text-gray-600" />
-                            </Button>
-                        </motion.div>
+                        {/* User Profile Dropdown */}
+                        <div className="relative" ref={userMenuRef}>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={toggleUserMenu}
+                                    className="flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100"
+                                >
+                                    {user?.avatar ? (
+                                        <img
+                                            src={user.avatar}
+                                            alt={user.username}
+                                            className="w-6 h-6 rounded-full"
+                                        />
+                                    ) : (
+                                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#58CC02] to-[#46A302] flex items-center justify-center">
+                                            <span className="text-white text-xs font-bold">
+                                                {user?.username?.charAt(0).toUpperCase() || 'U'}
+                                            </span>
+                                        </div>
+                                    )}
+                                    <span className="hidden sm:block text-sm font-medium text-gray-700">
+                                        {user?.username || 'User'}
+                                    </span>
+                                    <ChevronDown
+                                        size={14}
+                                        className={`text-gray-500 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''
+                                            }`}
+                                    />
+                                </Button>
+                            </motion.div>
+
+                            {/* User Dropdown Menu */}
+                            <AnimatePresence>
+                                {isUserMenuOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                                    >
+                                        {/* User Info */}
+                                        <div className="px-4 py-3 border-b border-gray-100">
+                                            <div className="flex items-center space-x-3">
+                                                {user?.avatar ? (
+                                                    <img
+                                                        src={user.avatar}
+                                                        alt={user.username}
+                                                        className="w-10 h-10 rounded-full"
+                                                    />
+                                                ) : (
+                                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#58CC02] to-[#46A302] flex items-center justify-center">
+                                                        <span className="text-white font-bold">
+                                                            {user?.username?.charAt(0).toUpperCase() || 'U'}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-medium text-gray-900 truncate">
+                                                        {user?.username || 'User'}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 truncate">
+                                                        {user?.email || 'user@example.com'}
+                                                    </p>
+                                                    <div className="flex items-center space-x-2 mt-1">
+                                                        <span className="text-xs text-[#58CC02] font-medium">
+                                                            Level {user?.level || 1}
+                                                        </span>
+                                                        <span className="text-xs text-gray-400">•</span>
+                                                        <span className="text-xs text-orange-500 font-medium">
+                                                            {user?.totalXP || 0} XP
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Menu Items */}
+                                        <div className="py-1">
+                                            <Link
+                                                to="/profile"
+                                                onClick={() => setIsUserMenuOpen(false)}
+                                                className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+                                            >
+                                                <Settings size={16} />
+                                                <span>Profile & Settings</span>
+                                            </Link>
+
+                                            <button
+                                                onClick={handleLogout}
+                                                disabled={isLoading}
+                                                className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150 disabled:opacity-50"
+                                            >
+                                                <LogOut size={16} />
+                                                <span>{isLoading ? 'Signing out...' : 'Sign out'}</span>
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
 
                         {/* Mobile Menu Button */}
                         <div className="md:hidden">

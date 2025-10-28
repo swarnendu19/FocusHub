@@ -1,13 +1,119 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- App Information -->
+  <title>FocusHub - Gamified Time Tracker</title>
+  <meta name="description"
+    content="Track your time with gamification elements to boost productivity. Earn XP, unlock achievements, and compete with others." />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Theme Colors -->
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="msapplication-TileColor" content="#3b82f6" />
+
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="FocusHub" />
+
+  <!-- Accessibility -->
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- Preload critical fonts -->
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=DIN+Round+Pro:wght@300;400;500;700;900&display=swap" as="style" />
+
+  <!-- Safe area CSS variables for mobile devices -->
+  <style>
+    :root {
+      --safe-area-inset-top: env(safe-area-inset-top);
+      --safe-area-inset-right: env(safe-area-inset-right);
+      --safe-area-inset-bottom: env(safe-area-inset-bottom);
+      --safe-area-inset-left: env(safe-area-inset-left);
+    }
+
+    /* Prevent flash of unstyled content */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #1f2937;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1f2937;
+        color: #f9fafb;
+      }
+    }
+
+    /* Loading spinner for initial load */
+    .initial-loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    /* Hide loading spinner once React loads */
+    #root:not(:empty)+.initial-loading {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Skip link for keyboard navigation -->
+  <a href="#main-content"
+    class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded">
+    Skip to main content
+  </a>
+
+  <!-- Main app container -->
+  <div id="root"></div>
+
+  <!-- Loading spinner shown until React loads -->
+  <div class="initial-loading" aria-label="Loading application"></div>
+
+  <!-- ARIA live region for screen reader announcements -->
+  <div id="aria-live-region" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+  <div id="aria-live-region-assertive" aria-live="assertive" aria-atomic="true" class="sr-only"></div>
+
+  <!-- No JavaScript fallback -->
+  <noscript>
+    <div style="text-align: center; padding: 2rem; font-family: system-ui, sans-serif;">
+      <h1>JavaScript Required</h1>
+      <p>This application requires JavaScript to function properly. Please enable JavaScript in your browser settings.
+      </p>
+    </div>
+  </noscript>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

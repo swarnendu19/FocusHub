@@ -45,6 +45,9 @@ interface TimerState {
     getSessionsByTask: (taskId: string) => TimeSession[];
     deleteSession: (sessionId: string) => void;
     updateSession: (sessionId: string, updates: Partial<TimeSession>) => void;
+
+    // Timer recovery
+    recoverTimer: () => void;
 }
 
 export const useTimerStore = create<TimerState>()(
@@ -65,6 +68,12 @@ export const useTimerStore = create<TimerState>()(
                 weeklyGoal: 2400, // 40 hours in minutes
 
                 startTimer: (projectId, taskId, description) => {
+                    // Stop any existing session first
+                    const { activeSession } = get();
+                    if (activeSession) {
+                        get().stopTimer();
+                    }
+
                     const now = new Date();
                     const session: TimeSession = {
                         id: crypto.randomUUID(),
@@ -110,7 +119,10 @@ export const useTimerStore = create<TimerState>()(
                             dailyTime: state.dailyTime + durationInMinutes,
                             weeklyTime: state.weeklyTime + durationInMinutes,
                         }));
+
+                        return completedSession;
                     }
+                    return null;
                 },
 
                 pauseTimer: () => {
@@ -234,6 +246,38 @@ export const useTimerStore = create<TimerState>()(
                             session.id === sessionId ? { ...session, ...updates } : session
                         ),
                     }));
+                },
+
+                // Timer recovery - handles page refresh during active sessions
+                recoverTimer: () => {
+                    const { activeSession, isRunning, isPaused, startTime } = get();
+
+                    if (activeSession && (isRunning || isPaused)) {
+                        const now = new Date();
+                        const sessionStartTime = new Date(activeSession.startTime);
+
+                        // Check if session is too old (more than 24 hours)
+                        const maxSessionAge = 24 * 60 * 60 * 1000; // 24 hours in ms
+                        if (now.getTime() - sessionStartTime.getTime() > maxSessionAge) {
+                            // Session is too old, stop it
+                            get().stopTimer();
+                            return;
+                        }
+
+                        if (isRunning && startTime) {
+                            // Timer was running when page was refreshed
+                            // Calculate elapsed time since last startTime
+                            const lastStartTime = new Date(startTime);
+                            const timeSinceStart = now.getTime() - lastStartTime.getTime();
+
+                            // Update elapsed time to include time since page refresh
+                            set((state) => ({
+                                elapsedTime: state.elapsedTime + timeSinceStart,
+                                startTime: now, // Reset start time to now
+                            }));
+                        }
+                        // If paused, no need to update anything - elapsed time is already correct
+                    }
                 },
             }),
             {

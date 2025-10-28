@@ -24,3 +24,4 @@ export {
     ToastAction,
 } from './toast'
 export { GameCard } from './game-card'
+export { ToggleGroup, ToggleGroupItem } from './toggle-group'
