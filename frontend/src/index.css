@@ -1,239 +1,130 @@
 @import "tailwindcss";
 @import "./styles/accessibility.css";
 
+/* Dark minimalist theme */
 @theme {
-  /* Duolingo-inspired color palette */
-  --color-primary: #58CC02;
-  --color-primary-dark: #46A302;
-  --color-primary-light: #89E219;
+  /* Colors used: #1C1C1C (background), #757373 (secondary/neutral), #FFFFFF (text) */
 
-  --color-secondary: #1CB0F6;
-  --color-secondary-dark: #0EA5E9;
-  --color-secondary-light: #38BDF8;
+  --color-primary: #FFFFFF; /* main text, logo, and highlight */
+  --color-primary-dark: #E5E5E5; /* subtle hover or lighter gray text */
+  --color-primary-light: #FFFFFF; /* for high contrast elements */
 
-  --color-accent: #FF9600;
-  --color-danger: #FF4B4B;
-  --color-warning: #FFC800;
-  --color-xp: #FFD700;
-  --color-streak: #FF6B35;
-  --color-achievement: #9333EA;
+  --color-secondary: #757373; /* secondary text and icons */
+  --color-secondary-dark: #5C5C5C; /* darker hover or muted tone */
+  --color-secondary-light: #A0A0A0; /* subtle borders or disabled text */
 
-  /* Duolingo font family */
-  --font-din-round: 'DIN Round Pro', 'din-round', system-ui, -apple-system, sans-serif;
+  --color-accent: #FFFFFF; /* for buttons or borders */
+  --color-danger: #FF4B4B; /* alerts */
+  --color-warning: #FFC800; /* warnings */
+  --color-xp: #757373; /* muted icons/secondary */
+  --color-streak: #757373; /* consistent gray for icons */
+  --color-achievement: #FFFFFF; /* white accent for highlights */
 
-  /* Custom animations */
+  /* Background colors */
+  --color-background: #1C1C1C; /* page background */
+  --color-surface: #2A2A2A; /* cards, nav bar, inputs */
+  --color-border: #3A3A3A; /* subtle borders */
+
+  /* Font */
+  --font-din-round: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
+
+  /* Neutral animations */
   --animate-glow: glow 2s ease-in-out infinite alternate;
   --animate-float: float 3s ease-in-out infinite;
   --animate-wiggle: wiggle 0.5s ease-in-out;
   --animate-shake: shake 0.5s ease-in-out;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DIN+Round+Pro:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap');
 
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: 'DIN Round Pro', 'din-round', system-ui, -apple-system, sans-serif;
-  background-color: #ffffff;
-  color: #1f2937;
+  font-family: var(--font-din-round);
+  color: var(--color-primary);
+  background-color: var(--color-background);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+/* UTILITIES */
 @layer utilities {
-
-  /* Custom shadow utilities for Duolingo-style buttons */
+  /* Minimal neutral shadows */
   .shadow-duolingo {
-    box-shadow: 0 4px 0 0 #46A302;
+    box-shadow: 0 4px 0 0 var(--color-border);
   }
-
   .shadow-duolingo-hover {
-    box-shadow: 0 6px 0 0 #46A302;
+    box-shadow: 0 6px 0 0 var(--color-border);
   }
-
   .shadow-duolingo-active {
-    box-shadow: 0 2px 0 0 #46A302;
+    box-shadow: 0 2px 0 0 var(--color-border);
   }
 
-  /* Duolingo font utilities */
   .font-din-round {
     font-family: var(--font-din-round);
   }
 
-  .font-din-round-light {
-    font-family: var(--font-din-round);
-    font-weight: 300;
-  }
-
-  .font-din-round-medium {
-    font-family: var(--font-din-round);
-    font-weight: 500;
-  }
-
-  .font-din-round-bold {
-    font-family: var(--font-din-round);
-    font-weight: 700;
-  }
-
-  .font-din-round-black {
-    font-family: var(--font-din-round);
-    font-weight: 900;
-  }
+  .font-din-round-light { font-weight: 300; }
+  .font-din-round-medium { font-weight: 500; }
+  .font-din-round-bold { font-weight: 700; }
+  .font-din-round-black { font-weight: 900; }
 }
 
+/* COMPONENTS */
 @layer components {
-
-  /* Duolingo-style button base */
+  /* Minimalist button */
   .btn-duolingo {
-    @apply relative inline-flex items-center justify-center rounded-xl font-bold text-white transition-all duration-150 ease-out;
+    @apply relative inline-flex items-center justify-center rounded-xl font-bold transition-all duration-150 ease-out;
+    color: var(--color-background);
+    background-color: var(--color-primary);
+    box-shadow: 0 4px 0 0 var(--color-border);
     @apply transform hover:-translate-y-0.5 active:translate-y-0;
-    box-shadow: 0 4px 0 0 var(--color-primary-dark);
   }
 
   .btn-duolingo:hover {
-    box-shadow: 0 6px 0 0 var(--color-primary-dark);
+    background-color: var(--color-primary-dark);
+    box-shadow: 0 6px 0 0 var(--color-border);
   }
 
   .btn-duolingo:active {
-    box-shadow: 0 2px 0 0 var(--color-primary-dark);
+    background-color: var(--color-secondary-dark);
+    box-shadow: 0 2px 0 0 var(--color-border);
   }
 
-  /* Animation utilities */
-  .animate-bounce-in {
-    animation: bounceIn 0.6s ease-out;
-  }
-
-  .animate-slide-up-fade {
-    animation: slideUpFade 0.4s ease-out;
-  }
-
-  .animate-scale-bounce {
-    animation: scaleBounce 0.5s ease-out;
-  }
-
+  /* Neutral glow */
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
   }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-wiggle {
-    animation: wiggle 0.5s ease-in-out;
-  }
-
-  .animate-shake {
-    animation: shake 0.5s ease-in-out;
-  }
+  .animate-float { animation: float 3s ease-in-out infinite; }
+  .animate-wiggle { animation: wiggle 0.5s ease-in-out; }
+  .animate-shake { animation: shake 0.5s ease-in-out; }
 }
 
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-
-  70% {
-    transform: scale(0.9);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes slideUpFade {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleBounce {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
+/* KEYFRAMES */
 @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(88, 204, 2, 0.5);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
   }
-
   100% {
-    box-shadow: 0 0 20px rgba(88, 204, 2, 0.8), 0 0 30px rgba(88, 204, 2, 0.6);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 30px rgba(255, 255, 255, 0.4);
   }
 }
 
 @keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes wiggle {
-
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-
-  25% {
-    transform: rotate(-3deg);
-  }
-
-  75% {
-    transform: rotate(3deg);
-  }
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
 }
 
 @keyframes shake {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: translateX(-2px);
-  }
-
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translateX(2px);
-  }
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
 }
