@@ -35,7 +35,7 @@ export function Home() {
 
     return (
         <motion.div
-            className="space-y-6 p-6"
+            className="space-y-5 p-6"
             variants={pageVariants}
             initial="initial"
             animate="animate"

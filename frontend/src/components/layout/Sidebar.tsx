@@ -51,7 +51,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
             variants={sidebarVariants}
             animate={isCollapsed ? 'collapsed' : 'expanded'}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="fixed left-0 top-0 h-full bg-white border-r border-gray-200 shadow-sm z-40 flex flex-col"
+            className="fixed left-0 top-0 h-full bg-[#1C1C1C] border-r border-gray-200 shadow-sm z-40 flex flex-col"
         >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -66,9 +66,9 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                             className="flex items-center space-x-2"
                         >
                             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#58CC02] to-[#46A302] flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">FH</span>
+                                <span className="text-[#FAFAFA] font-bold text-sm">FH</span>
                             </div>
-                            <span className="font-bold text-lg text-gray-900">FocusHub</span>
+                            <span className="font-bold text-lg text-[#FAFAFA]">FocusHub</span>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -108,8 +108,8 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                                     className={`
                     flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 relative
                     ${isActive
-                                            ? 'bg-[#58CC02] text-white shadow-md'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                            ? 'bg-[#FAFAFA] text-gray-900 shadow-md'
+                                            : 'text-[#FAFAFA] hover:text-gray-900 hover:bg-gray-100'
                                         }
                   `}
                                 >
@@ -149,10 +149,10 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, x: -10 }}
                                             transition={{ duration: 0.2 }}
-                                            className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-2 py-1 rounded text-sm whitespace-nowrap z-50"
+                                            className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#FAFAFA] text-gray-900 px-2 py-1 rounded text-sm whitespace-nowrap z-50"
                                         >
                                             {item.name}
-                                            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-900 rotate-45" />
+                                            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-[#FAFAFA] rotate-45" />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -163,7 +163,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
             </nav>
 
             {/* Bottom Section */}
-            <div className="p-4 border-t border-gray-200 space-y-2">
+            <div className="p-4 border-t border-gray-200 space-y-6">
                 {bottomItems.map((item) => {
                     const Icon = item.icon;
 
@@ -176,7 +176,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                                 onHoverEnd={() => setHoveredItem(null)}
                                 className="relative"
                             >
-                                <div className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-200">
+                                <div className="flex items-center space-x-3 px-3 py-2 rounded-lg text-[#FAFAFA] hover:text-gray-900 hover:bg-gray-100 transition-all duration-200">
                                     <Icon size={18} className="flex-shrink-0" />
 
                                     <AnimatePresence mode="wait">
@@ -203,10 +203,10 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, x: -10 }}
                                             transition={{ duration: 0.2 }}
-                                            className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-2 py-1 rounded text-sm whitespace-nowrap z-50"
+                                            className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#FAFAFA] text-gray-900 px-2 py-1 rounded text-sm whitespace-nowrap z-50"
                                         >
                                             {item.name}
-                                            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-900 rotate-45" />
+                                            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-[#FAFAFA] rotate-45" />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
