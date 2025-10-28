@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+<<<<<<< HEAD
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { PageTransition, SlidePageTransition, FadePageTransition } from '../PageTransition';
 
@@ -9,10 +10,22 @@ vi.mock('framer-motion', () => ({
         div: ({ children, ...props }: any) => <div {...props}>{children}</div>
     },
     AnimatePresence: ({ children }: any) => <div>{children}</div>
+=======
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { PageTransition, SlidePageTransition, FadePageTransition } from '../PageTransition';
+
+// Mock framer-motion to avoid animation issues in tests
+vi.mock('framer-motion', () => ({
+    motion: {
+        div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    },
+    AnimatePresence: ({ children }: any) => children,
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
 }));
 
 const TestComponent = ({ text }: { text: string }) => <div>{text}</div>;
 
+<<<<<<< HEAD
 const NavigationTestComponent = () => {
     const navigate = useNavigate();
     return (
@@ -74,11 +87,66 @@ describe('PageTransition', () => {
                 <div>First Child</div>
                 <div>Second Child</div>
             </PageTransition>
+=======
+const PageTransitionWithRouter = ({ children }: { children: React.ReactNode }) => (
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<PageTransition>{children}</PageTransition>} />
+        </Routes>
+    </BrowserRouter>
+);
+
+const SlidePageTransitionWithRouter = ({ children }: { children: React.ReactNode }) => (
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<SlidePageTransition>{children}</SlidePageTransition>} />
+        </Routes>
+    </BrowserRouter>
+);
+
+const FadePageTransitionWithRouter = ({ children }: { children: React.ReactNode }) => (
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<FadePageTransition>{children}</FadePageTransition>} />
+        </Routes>
+    </BrowserRouter>
+);
+
+describe('PageTransition', () => {
+    it('renders children content', () => {
+        render(
+            <PageTransitionWithRouter>
+                <TestComponent text="Page Content" />
+            </PageTransitionWithRouter>
+        );
+
+        expect(screen.getByText('Page Content')).toBeInTheDocument();
+    });
+
+    it('applies correct wrapper classes', () => {
+        render(
+            <PageTransitionWithRouter>
+                <div data-testid="content">Content</div>
+            </PageTransitionWithRouter>
+        );
+
+        const wrapper = screen.getByTestId('content').parentElement;
+        expect(wrapper).toHaveClass('w-full', 'h-full');
+    });
+
+    it('handles multiple children', () => {
+        render(
+            <PageTransitionWithRouter>
+                <div>First Child</div>
+                <div>Second Child</div>
+            </PageTransitionWithRouter>
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
         );
 
         expect(screen.getByText('First Child')).toBeInTheDocument();
         expect(screen.getByText('Second Child')).toBeInTheDocument();
     });
+<<<<<<< HEAD
 
     it('applies correct CSS classes', () => {
         const { container } = renderWithRouter(
@@ -98,12 +166,23 @@ describe('SlidePageTransition', () => {
             <SlidePageTransition>
                 <div>Slide Content</div>
             </SlidePageTransition>
+=======
+});
+
+describe('SlidePageTransition', () => {
+    it('renders children content with slide transition', () => {
+        render(
+            <SlidePageTransitionWithRouter>
+                <TestComponent text="Slide Content" />
+            </SlidePageTransitionWithRouter>
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
         );
 
         expect(screen.getByText('Slide Content')).toBeInTheDocument();
     });
 
     it('applies correct wrapper classes', () => {
+<<<<<<< HEAD
         const { container } = renderWithRouter(
             <SlidePageTransition>
                 <div>Content</div>
@@ -128,21 +207,40 @@ describe('SlidePageTransition', () => {
         expect(screen.getByText('Title')).toBeInTheDocument();
         expect(screen.getByText('Paragraph')).toBeInTheDocument();
         expect(screen.getByText('Button')).toBeInTheDocument();
+=======
+        render(
+            <SlidePageTransitionWithRouter>
+                <div data-testid="slide-content">Content</div>
+            </SlidePageTransitionWithRouter>
+        );
+
+        const wrapper = screen.getByTestId('slide-content').parentElement;
+        expect(wrapper).toHaveClass('w-full', 'h-full');
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });
 
 describe('FadePageTransition', () => {
+<<<<<<< HEAD
     it('renders children with fade transition wrapper', () => {
         renderWithRouter(
             <FadePageTransition>
                 <div>Fade Content</div>
             </FadePageTransition>
+=======
+    it('renders children content with fade transition', () => {
+        render(
+            <FadePageTransitionWithRouter>
+                <TestComponent text="Fade Content" />
+            </FadePageTransitionWithRouter>
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
         );
 
         expect(screen.getByText('Fade Content')).toBeInTheDocument();
     });
 
     it('applies correct wrapper classes', () => {
+<<<<<<< HEAD
         const { container } = renderWithRouter(
             <FadePageTransition>
                 <div>Content</div>
@@ -289,5 +387,31 @@ describe('Transition Performance', () => {
         // Should still be functional
         expect(page1Button).toBeInTheDocument();
         expect(page2Button).toBeInTheDocument();
+=======
+        render(
+            <FadePageTransitionWithRouter>
+                <div data-testid="fade-content">Content</div>
+            </FadePageTransitionWithRouter>
+        );
+
+        const wrapper = screen.getByTestId('fade-content').parentElement;
+        expect(wrapper).toHaveClass('w-full', 'h-full');
+    });
+
+    it('handles complex content structures', () => {
+        render(
+            <FadePageTransitionWithRouter>
+                <div>
+                    <h1>Title</h1>
+                    <p>Description</p>
+                    <button>Action</button>
+                </div>
+            </FadePageTransitionWithRouter>
+        );
+
+        expect(screen.getByText('Title')).toBeInTheDocument();
+        expect(screen.getByText('Description')).toBeInTheDocument();
+        expect(screen.getByText('Action')).toBeInTheDocument();
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });

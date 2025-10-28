@@ -1,3 +1,4 @@
+ 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useUserStore } from '@/stores/userStore';
@@ -50,6 +51,7 @@ export function XP() {
         );
     }
 
+ 
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -57,7 +59,9 @@ export function XP() {
             transition={{ duration: 0.5 }}
             className="space-y-6"
         >
+ 
             {/* Header */}
+ 
             <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     XP & Achievements
@@ -66,7 +70,7 @@ export function XP() {
                     Level up and unlock achievements for your productivity!
                 </p>
             </div>
-
+ 
             {/* XP Progress Section */}
             <Card className="p-6">
                 <div className="flex items-center space-x-2 mb-6">
@@ -187,6 +191,7 @@ export function XP() {
                     xpGained={levelUpData.xpGained}
                 />
             )}
+ 
         </motion.div>
     );
 }

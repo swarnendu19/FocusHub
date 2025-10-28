@@ -11,6 +11,7 @@ import {
     PageSkeleton
 } from '../LoadingSkeleton';
 
+<<<<<<< HEAD
 // Mock framer-motion for testing
 vi.mock('framer-motion', () => ({
     motion: {
@@ -18,17 +19,33 @@ vi.mock('framer-motion', () => ({
             <div className={className} {...props}>{children}</div>
         )
     }
+=======
+// Mock framer-motion to avoid animation issues in tests
+vi.mock('framer-motion', () => ({
+    motion: {
+        div: ({ children, className, animate, transition, 'data-testid': testId, ...props }: any) => (
+            <div className={className} data-testid={testId} {...props}>{children}</div>
+        ),
+    },
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
 }));
 
 describe('Skeleton', () => {
     it('renders with default classes', () => {
+<<<<<<< HEAD
         const { container } = render(<Skeleton />);
 
         const skeleton = container.firstChild as HTMLElement;
+=======
+        render(<Skeleton data-testid="skeleton" />);
+
+        const skeleton = screen.getByTestId('skeleton');
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
         expect(skeleton).toHaveClass('bg-gray-200', 'rounded-md');
     });
 
     it('applies custom className', () => {
+<<<<<<< HEAD
         const { container } = render(<Skeleton className="custom-class" />);
 
         const skeleton = container.firstChild as HTMLElement;
@@ -82,10 +99,48 @@ describe('CardSkeleton', () => {
         // Should have space-y-4 for content spacing
         const contentArea = container.querySelector('.space-y-4');
         expect(contentArea).toBeInTheDocument();
+=======
+        render(<Skeleton className="custom-class" data-testid="skeleton" />);
+
+        const skeleton = screen.getByTestId('skeleton');
+        expect(skeleton).toHaveClass('custom-class');
+    });
+
+    it('applies animate pulse class when animate is true', () => {
+        render(<Skeleton animate={true} data-testid="skeleton" />);
+
+        const skeleton = screen.getByTestId('skeleton');
+        expect(skeleton).toHaveClass('animate-pulse');
+    });
+
+    it('does not apply animate pulse class when animate is false', () => {
+        render(<Skeleton animate={false} data-testid="skeleton" />);
+
+        const skeleton = screen.getByTestId('skeleton');
+        expect(skeleton).not.toHaveClass('animate-pulse');
+    });
+});
+
+describe('CardSkeleton', () => {
+    it('renders card skeleton structure', () => {
+        render(<CardSkeleton />);
+
+        // Should have card container
+        const cardContainer = document.querySelector('.bg-white.rounded-lg.border');
+        expect(cardContainer).toBeInTheDocument();
+    });
+
+    it('applies custom className to card container', () => {
+        render(<CardSkeleton className="custom-card" />);
+
+        const cardContainer = document.querySelector('.custom-card');
+        expect(cardContainer).toBeInTheDocument();
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });
 
 describe('ProjectCardSkeleton', () => {
+<<<<<<< HEAD
     it('renders project card structure', () => {
         const { container } = render(<ProjectCardSkeleton />);
 
@@ -110,10 +165,26 @@ describe('ProjectCardSkeleton', () => {
 
         const circularSkeletons = container.querySelectorAll('.rounded-full');
         expect(circularSkeletons.length).toBeGreaterThan(0);
+=======
+    it('renders project card skeleton structure', () => {
+        render(<ProjectCardSkeleton />);
+
+        // Should have card container with proper styling
+        const cardContainer = document.querySelector('.bg-white.rounded-lg.border');
+        expect(cardContainer).toBeInTheDocument();
+    });
+
+    it('applies custom className', () => {
+        render(<ProjectCardSkeleton className="project-card" />);
+
+        const cardContainer = document.querySelector('.project-card');
+        expect(cardContainer).toBeInTheDocument();
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });
 
 describe('LeaderboardRowSkeleton', () => {
+<<<<<<< HEAD
     it('renders leaderboard row structure', () => {
         const { container } = render(<LeaderboardRowSkeleton />);
 
@@ -133,10 +204,26 @@ describe('LeaderboardRowSkeleton', () => {
 
         const spacedContainer = container.querySelector('.space-x-4');
         expect(spacedContainer).toBeInTheDocument();
+=======
+    it('renders leaderboard row skeleton structure', () => {
+        render(<LeaderboardRowSkeleton />);
+
+        // Should have row container
+        const rowContainer = document.querySelector('.flex.items-center.space-x-4');
+        expect(rowContainer).toBeInTheDocument();
+    });
+
+    it('applies custom className', () => {
+        render(<LeaderboardRowSkeleton className="leaderboard-row" />);
+
+        const rowContainer = document.querySelector('.leaderboard-row');
+        expect(rowContainer).toBeInTheDocument();
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });
 
 describe('DashboardSkeleton', () => {
+<<<<<<< HEAD
     it('renders complete dashboard structure', () => {
         render(<DashboardSkeleton />);
 
@@ -192,10 +279,37 @@ describe('ProjectsPageSkeleton', () => {
 
         const grid = container.querySelector('.grid');
         expect(grid).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
+=======
+    it('renders dashboard skeleton with header and stats cards', () => {
+        render(<DashboardSkeleton />);
+
+        // Should have main container
+        const container = document.querySelector('.space-y-6');
+        expect(container).toBeInTheDocument();
+
+        // Should have grid for stats cards
+        const statsGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+        expect(statsGrid).toBeInTheDocument();
+    });
+});
+
+describe('ProjectsPageSkeleton', () => {
+    it('renders projects page skeleton with header and project grid', () => {
+        render(<ProjectsPageSkeleton />);
+
+        // Should have main container
+        const container = document.querySelector('.space-y-6');
+        expect(container).toBeInTheDocument();
+
+        // Should have project grid
+        const projectGrid = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3');
+        expect(projectGrid).toBeInTheDocument();
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });
 
 describe('LeaderboardSkeleton', () => {
+<<<<<<< HEAD
     it('renders leaderboard structure', () => {
         const { container } = render(<LeaderboardSkeleton />);
 
@@ -216,11 +330,23 @@ describe('LeaderboardSkeleton', () => {
         const { container } = render(<LeaderboardSkeleton />);
 
         const rowsContainer = container.querySelector('.space-y-3');
+=======
+    it('renders leaderboard skeleton with header and rows', () => {
+        render(<LeaderboardSkeleton />);
+
+        // Should have main container
+        const container = document.querySelector('.space-y-6');
+        expect(container).toBeInTheDocument();
+
+        // Should have rows container
+        const rowsContainer = document.querySelector('.space-y-3');
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
         expect(rowsContainer).toBeInTheDocument();
     });
 });
 
 describe('PageSkeleton', () => {
+<<<<<<< HEAD
     it('renders generic page structure', () => {
         const { container } = render(<PageSkeleton />);
 
@@ -320,5 +446,17 @@ describe('Skeleton Customization', () => {
 
         const skeleton = container.firstChild as HTMLElement;
         expect(skeleton).toHaveClass('h-8', 'w-32', 'bg-blue-200', 'rounded-md');
+=======
+    it('renders generic page skeleton', () => {
+        render(<PageSkeleton />);
+
+        // Should have main container
+        const container = document.querySelector('.space-y-6');
+        expect(container).toBeInTheDocument();
+
+        // Should have content sections
+        const contentSections = document.querySelector('.space-y-4');
+        expect(contentSections).toBeInTheDocument();
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });

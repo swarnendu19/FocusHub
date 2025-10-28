@@ -1,3 +1,4 @@
+ 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCw, Users, TrendingUp } from 'lucide-react';
@@ -22,11 +23,13 @@ export function Leaderboard() {
         window.location.reload();
     };
 
+ 
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+ 
             className="space-y-8"
         >
             {/* Header */}
@@ -136,6 +139,7 @@ export function Leaderboard() {
 
             {/* Community Analytics */}
             <CommunityAnalytics />
+ 
         </motion.div>
     );
 }

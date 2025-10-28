@@ -1,6 +1,9 @@
+ 
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+ 
+ 
 import {
     Home,
     FolderOpen,
@@ -8,6 +11,7 @@ import {
     Star,
     Menu,
     X,
+ 
     User,
     LogOut,
     Settings,
@@ -15,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useAuth } from '@/hooks/useAuth';
+ 
 
 const navigationItems = [
     { name: 'Home', href: '/', icon: Home },
@@ -25,15 +30,17 @@ const navigationItems = [
 
 export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+ 
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const location = useLocation();
     const { user, logout, isLoading } = useAuth();
     const userMenuRef = useRef<HTMLDivElement>(null);
+ 
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
-
+ 
     const toggleUserMenu = () => {
         setIsUserMenuOpen(!isUserMenuOpen);
     };
@@ -60,6 +67,7 @@ export function Header() {
         };
     }, [isUserMenuOpen]);
 
+ 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
             <div className="container mx-auto px-4">
@@ -122,6 +130,7 @@ export function Header() {
 
                     {/* User Profile & Mobile Menu Button */}
                     <div className="flex items-center space-x-2">
+ 
                         {/* User Profile Dropdown */}
                         <div className="relative" ref={userMenuRef}>
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -225,6 +234,7 @@ export function Header() {
                                 )}
                             </AnimatePresence>
                         </div>
+ 
 
                         {/* Mobile Menu Button */}
                         <div className="md:hidden">

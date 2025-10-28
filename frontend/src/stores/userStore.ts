@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+ 
 import type { User, UserPreferences, Task, Achievement } from '@/types';
 import { AchievementService } from '@/services/achievementService';
+ 
 
 interface UserState {
     user: User | null;
@@ -40,6 +42,7 @@ interface UserState {
     getCompletedTasksCount: () => number;
     getActiveTasksCount: () => number;
     getTotalTimeSpent: () => number;
+ 
 
     // Achievement management
     checkAchievements: () => Achievement[];
@@ -56,6 +59,7 @@ interface UserState {
 
     // Development helpers
     addSampleTasks: () => void;
+ 
 }
 
 export const useUserStore = create<UserState>()(
@@ -121,8 +125,10 @@ export const useUserStore = create<UserState>()(
                 addXP: (amount) => {
                     const currentUser = get().user;
                     if (currentUser) {
+ 
                         const oldLevel = currentUser.level;
                         const newTotalXP = currentUser.totalXP + amount;
+ 
 
                         // Calculate level progression (assuming 1000 XP per level)
                         const newLevel = Math.floor(newTotalXP / 1000) + 1;
@@ -130,6 +136,7 @@ export const useUserStore = create<UserState>()(
                         const adjustedCurrentXP = newTotalXP - xpForCurrentLevel;
                         const xpToNextLevel = 1000 - adjustedCurrentXP;
 
+ 
                         // Calculate skill points gained from leveling up
                         const levelsGained = newLevel - oldLevel;
                         let skillPointsGained = levelsGained; // 1 skill point per level
@@ -140,6 +147,7 @@ export const useUserStore = create<UserState>()(
                         // Update skill points in user data
                         const newSkillPoints = currentUser.skillPoints + skillPointsGained;
 
+ 
                         set({
                             user: {
                                 ...currentUser,
@@ -147,6 +155,7 @@ export const useUserStore = create<UserState>()(
                                 currentXP: adjustedCurrentXP,
                                 level: newLevel,
                                 xpToNextLevel: xpToNextLevel,
+ 
                                 skillPoints: newSkillPoints,
                             }
                         });
@@ -189,6 +198,7 @@ export const useUserStore = create<UserState>()(
                                 }, 500); // Delay level up celebration slightly
                             }
                         }, 100); // Small delay to ensure DOM is ready
+ 
                     }
                 },
 
@@ -295,6 +305,7 @@ export const useUserStore = create<UserState>()(
                     return [...user.tasks, ...user.completedTasks]
                         .reduce((total, task) => total + task.timeSpent, 0);
                 },
+ 
 
                 // Achievement management
                 checkAchievements: () => {
@@ -427,6 +438,7 @@ export const useUserStore = create<UserState>()(
                         });
                     }
                 },
+ 
             }),
             {
                 name: 'user-store',

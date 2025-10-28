@@ -1,3 +1,4 @@
+ 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TaskGrid, TaskTimer, TaskTemplates, TaskImport, TaskAnalytics, TaskSharing } from '@/components/tasks';
@@ -37,6 +38,7 @@ export function Projects() {
 
     const allTasks = user ? [...user.tasks, ...(showCompleted ? user.completedTasks : [])] : [];
 
+ 
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -44,6 +46,7 @@ export function Projects() {
             transition={{ duration: 0.5 }}
             className="space-y-6"
         >
+ 
             {/* Header */}
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div>
@@ -252,6 +255,7 @@ export function Projects() {
                     </p>
                 </motion.div>
             )}
+ 
         </motion.div>
     );
 }

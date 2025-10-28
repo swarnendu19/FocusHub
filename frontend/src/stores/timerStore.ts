@@ -45,9 +45,10 @@ interface TimerState {
     getSessionsByTask: (taskId: string) => TimeSession[];
     deleteSession: (sessionId: string) => void;
     updateSession: (sessionId: string, updates: Partial<TimeSession>) => void;
-
+ 
     // Timer recovery
     recoverTimer: () => void;
+ 
 }
 
 export const useTimerStore = create<TimerState>()(
@@ -247,7 +248,7 @@ export const useTimerStore = create<TimerState>()(
                         ),
                     }));
                 },
-
+ 
                 // Timer recovery - handles page refresh during active sessions
                 recoverTimer: () => {
                     const { activeSession, isRunning, isPaused, startTime } = get();
@@ -279,6 +280,7 @@ export const useTimerStore = create<TimerState>()(
                         // If paused, no need to update anything - elapsed time is already correct
                     }
                 },
+ 
             }),
             {
                 name: 'timer-store',

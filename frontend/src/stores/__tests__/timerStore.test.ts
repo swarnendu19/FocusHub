@@ -1,17 +1,21 @@
+ 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { useTimerStore } from '../timerStore';
 import type { TimeSession } from '@/types';
+ 
 
 // Mock crypto.randomUUID
 Object.defineProperty(global, 'crypto', {
     value: {
+ 
         randomUUID: vi.fn(() => 'mock-uuid'),
     },
+ 
 });
 
 describe('TimerStore', () => {
     beforeEach(() => {
-        // Reset the store before each test
+  
         useTimerStore.setState({
             activeSession: null,
             isRunning: false,
@@ -24,6 +28,7 @@ describe('TimerStore', () => {
             dailyGoal: 480,
             weeklyGoal: 2400,
         });
+ 
         vi.clearAllMocks();
         vi.useFakeTimers();
     });
@@ -532,5 +537,6 @@ describe('TimerStore', () => {
             // Should handle gracefully without crashing
             expect(state.activeSession).toBeTruthy();
         });
+ 
     });
 });

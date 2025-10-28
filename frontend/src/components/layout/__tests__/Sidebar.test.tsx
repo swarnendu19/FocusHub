@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -18,6 +19,22 @@ describe('Sidebar', () => {
 
     it('renders in expanded state by default', () => {
         renderWithRouter(<Sidebar />);
+=======
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { Sidebar } from '../Sidebar';
+
+const SidebarWithRouter = (props: any) => (
+    <BrowserRouter>
+        <Sidebar {...props} />
+    </BrowserRouter>
+);
+
+describe('Sidebar', () => {
+    it('renders navigation items when expanded', () => {
+        render(<SidebarWithRouter isCollapsed={false} />);
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
 
         expect(screen.getByText('FocusHub')).toBeInTheDocument();
         expect(screen.getByText('Dashboard')).toBeInTheDocument();
@@ -26,6 +43,7 @@ describe('Sidebar', () => {
         expect(screen.getByText('XP & Achievements')).toBeInTheDocument();
     });
 
+<<<<<<< HEAD
     it('renders in collapsed state when prop is set', () => {
         renderWithRouter(<Sidebar isCollapsed={true} />);
 
@@ -44,10 +62,23 @@ describe('Sidebar', () => {
     it('calls onToggle when toggle button is clicked', () => {
         const onToggle = vi.fn();
         renderWithRouter(<Sidebar onToggle={onToggle} />);
+=======
+    it('hides text when collapsed', () => {
+        render(<SidebarWithRouter isCollapsed={true} />);
+
+        expect(screen.queryByText('Dashboard')).not.toBeInTheDocument();
+        expect(screen.queryByText('Projects')).not.toBeInTheDocument();
+    });
+
+    it('calls onToggle when toggle button is clicked', () => {
+        const mockToggle = vi.fn();
+        render(<SidebarWithRouter isCollapsed={false} onToggle={mockToggle} />);
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
 
         const toggleButton = screen.getByRole('button');
         fireEvent.click(toggleButton);
 
+<<<<<<< HEAD
         expect(onToggle).toHaveBeenCalledOnce();
     });
 
@@ -227,5 +258,20 @@ describe('Sidebar', () => {
             const tooltip = screen.getByText('Dashboard');
             expect(tooltip.parentElement).toHaveClass('absolute', 'left-full');
         });
+=======
+        expect(mockToggle).toHaveBeenCalledTimes(1);
+    });
+
+    it('renders navigation links', () => {
+        render(<SidebarWithRouter isCollapsed={false} />);
+
+        // Check that navigation links exist
+        const links = screen.getAllByRole('link');
+        expect(links.length).toBeGreaterThan(0);
+
+        // Check for specific navigation items
+        expect(screen.getByText('Dashboard')).toBeInTheDocument();
+        expect(screen.getByText('Projects')).toBeInTheDocument();
+>>>>>>> 045c345d235c726879db42dc445e63b1b8382a60
     });
 });
