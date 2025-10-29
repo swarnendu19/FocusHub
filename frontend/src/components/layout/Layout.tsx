@@ -34,7 +34,7 @@ export function Layout({ children }: LayoutProps) {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#1C1C1C]">
             {/* Desktop Layout with Sidebar */}
             <div className="hidden md:flex">
                 <Sidebar
@@ -73,7 +73,7 @@ export function Layout({ children }: LayoutProps) {
 // Alternative layout without sidebar (for auth pages, etc.)
 export function SimpleLayout({ children }: LayoutProps) {
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[#1C1C1C]">
             <main className="container mx-auto px-4 py-8">
                 <PageTransition>
                     {children || <Outlet />}
@@ -86,7 +86,7 @@ export function SimpleLayout({ children }: LayoutProps) {
 // Full-screen layout (for modals, overlays, etc.)
 export function FullScreenLayout({ children }: LayoutProps) {
     return (
-        <div className="fixed inset-0 bg-gray-50 z-50">
+        <div className="fixed inset-0 bg-[#1C1C1C] z-50">
             <PageTransition>
                 {children || <Outlet />}
             </PageTransition>
