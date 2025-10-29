@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Square, Clock, Target, Zap } from 'lucide-react';
+import { Play, Pause, Square, Clock, Target, Zap, Circle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -69,85 +69,107 @@ export function ActiveTimer({ className = '' }: ActiveTimerProps) {
         setCurrentTime(0);
     };
 
-    const timerVariants = {
-        idle: {
-            scale: 1,
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-        },
-        running: {
-            scale: [1, 1.02, 1],
-            boxShadow: [
-                '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                '0 8px 25px -5px rgba(88, 204, 2, 0.3)',
-                '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-            ],
-            transition: {
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-            },
-        },
-        paused: {
-            scale: 1,
-            boxShadow: '0 4px 6px -1px rgba(255, 150, 0, 0.2)',
-        },
-    };
-
-    const timeDisplayVariants = {
-        idle: { color: '#64748B' },
-        running: {
-            color: '#58CC02',
-            textShadow: '0 0 10px rgba(88, 204, 2, 0.3)',
-        },
-        paused: { color: '#FF9600' },
-    };
-
-    const getTimerState = () => {
-        if (isRunning) return 'running';
-        if (isPaused) return 'paused';
-        return 'idle';
-    };
-
     const displayTime = Math.floor(currentTime / 1000);
 
     return (
         <motion.div className={`w-full ${className}`}>
-            <Card className="p-6 bg-gradient-to-br from-white to-gray-50 border-2">
-                <motion.div
-                    variants={timerVariants}
-                    animate={getTimerState()}
-                    className="text-center space-y-6"
-                >
+            <Card className="p-8 bg-[#1C1C1C] border border-[#757373]/20 shadow-2xl overflow-hidden relative">
+                {/* Subtle animated gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#FAFAFA]/[0.02] to-transparent pointer-events-none" />
+                
+                <div className="relative z-10 space-y-8">
                     {/* Timer Display */}
-                    <div className="space-y-2">
+                    <div className="space-y-6 text-center">
+                        {/* Status */}
                         <motion.div
-                            className="flex items-center justify-center gap-2 text-gray-600"
+                            className="flex items-center justify-center gap-3"
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3 }}
+                            transition={{ duration: 0.4 }}
                         >
-                            <Clock className="w-5 h-5" />
-                            <span className="text-sm font-medium">
-                                {activeSession ? 'Active Session' : 'Ready to Focus'}
-                            </span>
+                            <AnimatePresence mode="wait">
+                                {isRunning ? (
+                                    <motion.div
+                                        key="running"
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <motion.div
+                                            animate={{
+                                                scale: [1, 1.2, 1],
+                                                opacity: [0.5, 1, 0.5],
+                                            }}
+                                            transition={{
+                                                duration: 2,
+                                                repeat: Infinity,
+                                                ease: "easeInOut",
+                                            }}
+                                        >
+                                            <Circle className="w-2 h-2 fill-[#FAFAFA] text-[#FAFAFA]" />
+                                        </motion.div>
+                                        <span className="text-sm font-medium text-[#FAFAFA] tracking-wide uppercase">
+                                            Focus Mode Active
+                                        </span>
+                                    </motion.div>
+                                ) : isPaused ? (
+                                    <motion.div
+                                        key="paused"
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Circle className="w-2 h-2 fill-[#757373] text-[#757373]" />
+                                        <span className="text-sm font-medium text-[#757373] tracking-wide uppercase">
+                                            Paused
+                                        </span>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="idle"
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        exit={{ scale: 0 }}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Circle className="w-2 h-2 fill-[#757373]/50 text-[#757373]/50" />
+                                        <span className="text-sm font-medium text-[#757373] tracking-wide uppercase">
+                                            Ready to Focus
+                                        </span>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
 
+                        {/* Time Display */}
                         <motion.div
-                            variants={timeDisplayVariants}
-                            animate={getTimerState()}
-                            className="text-6xl font-bold font-mono tracking-tight"
-                            transition={{ duration: 0.3 }}
+                            className="text-8xl font-bold font-mono tracking-tight text-[#FAFAFA]"
+                            animate={isRunning ? {
+                                textShadow: [
+                                    '0 0 20px rgba(250, 250, 250, 0)',
+                                    '0 0 30px rgba(250, 250, 250, 0.1)',
+                                    '0 0 20px rgba(250, 250, 250, 0)',
+                                ],
+                            } : {}}
+                            transition={{
+                                duration: 2,
+                                repeat: isRunning ? Infinity : 0,
+                                ease: "easeInOut",
+                            }}
                         >
                             {formatTimerDisplay(currentTime)}
                         </motion.div>
 
+                        {/* Description */}
                         <AnimatePresence>
                             {activeSession?.description && (
                                 <motion.p
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    className="text-gray-600 text-sm"
+                                    className="text-[#757373] text-sm font-medium"
                                 >
                                     {activeSession.description}
                                 </motion.p>
@@ -156,86 +178,92 @@ export function ActiveTimer({ className = '' }: ActiveTimerProps) {
                     </div>
 
                     {/* Control Buttons */}
-                    <div className="flex items-center justify-center gap-4">
+                    <div className="flex items-center justify-center gap-3">
                         <AnimatePresence mode="wait">
                             {!activeSession ? (
-                                <motion.div
-                                    key="start"
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
-                                    transition={{ duration: 0.2 }}
-                                >
-                                    <Button
-                                        onClick={handleStart}
-                                        size="lg"
-                                        className="bg-[--color-primary] hover:bg-[--color-primary-dark] text-white px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-                                    >
-                                        <Play className="w-5 h-5 mr-2" />
-                                        Start Timer
-                                    </Button>
-                                </motion.div>
+                             <motion.div
+                             key="start"
+                             initial={{ opacity: 0, y: 10 }}
+                             animate={{ opacity: 1, y: 0 }}
+                             exit={{ opacity: 0, y: 10 }}
+                             transition={{ duration: 0.3 }}
+                         >
+                             <Button
+                                 onClick={handleStart}
+                                 size="lg"
+                                 className="group relative overflow-hidden gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373]"
+                             >
+                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                                 <span className="relative flex items-center gap-2">
+                                     <Play className="w-5 h-5" />
+                                     Start Focus Session
+                                 </span>
+                             </Button>
+                         </motion.div>
                             ) : (
                                 <motion.div
                                     key="controls"
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
-                                    transition={{ duration: 0.2 }}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    transition={{ duration: 0.3 }}
                                     className="flex gap-3"
                                 >
                                     <Button
                                         onClick={handlePause}
-                                        variant="outline"
+                                        
                                         size="lg"
-                                        className="px-6 py-3 font-semibold border-2 hover:scale-105 transition-transform duration-200"
+                                        className="gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] hover:translate-x-1 hover:translate-y-1   hover:shadow-[2px_2px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373] dark:hover:shadow-[2px_2px_0px_0px_#757373]"
                                     >
                                         {isRunning ? (
-                                            <>
-                                                <Pause className="w-5 h-5 mr-2" />
+                                            <span className="flex items-center gap-2">
+                                                <Pause className="w-4 h-4" />
                                                 Pause
-                                            </>
+                                            </span>
                                         ) : (
-                                            <>
-                                                <Play className="w-5 h-5 mr-2" />
+                                            <span className="flex items-center gap-2">
+                                                <Play className="w-4 h-4" />
                                                 Resume
-                                            </>
+                                            </span>
                                         )}
                                     </Button>
 
                                     <Button
                                         onClick={handleStop}
-                                        variant="outline"
                                         size="lg"
-                                        className="px-6 py-3 font-semibold border-2 border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 hover:scale-105 transition-all duration-200"
+                                        className="gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] hover:translate-x-1 hover:translate-y-1  hover:shadow-[2px_2px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373] dark:hover:shadow-[2px_2px_0px_0px_#757373]"
                                     >
-                                        <Square className="w-5 h-5 mr-2" />
-                                        Stop
+                                        <span className="flex items-center gap-2">
+                                            <Square className="w-4 h-4" />
+                                            Stop
+                                        </span>
                                     </Button>
                                 </motion.div>
                             )}
                         </AnimatePresence>
                     </div>
 
-                    {/* Daily Progress Stats */}
+                    {/* Stats Bar */}
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="flex items-center justify-center gap-6 text-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="flex items-center justify-center gap-8 pt-6 border-t border-[#757373]/10"
                     >
                         <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-blue-500" />
-                            <span className="text-gray-600">Today:</span>
-                            <span className="font-semibold text-gray-900">
+                            <Clock className="w-4 h-4 text-[#757373]" />
+                            <span className="text-sm text-[#757373]">Today</span>
+                            <span className="text-sm font-semibold text-[#FAFAFA]">
                                 {formatDurationShort(getTotalTimeToday())}
                             </span>
                         </div>
 
+                        <div className="w-px h-4 bg-[#757373]/20" />
+
                         <div className="flex items-center gap-2">
-                            <Target className="w-4 h-4 text-green-500" />
-                            <span className="text-gray-600">Goal:</span>
-                            <span className="font-semibold text-gray-900">
+                            <Target className="w-4 h-4 text-[#757373]" />
+                            <span className="text-sm text-[#757373]">Progress</span>
+                            <span className="text-sm font-semibold text-[#FAFAFA]">
                                 {Math.round(getDailyProgress())}%
                             </span>
                         </div>
@@ -248,60 +276,31 @@ export function ActiveTimer({ className = '' }: ActiveTimerProps) {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
-                                className="bg-blue-50 border border-blue-200 rounded-lg p-3"
+                                className="bg-[#FAFAFA]/5 border border-[#FAFAFA]/10 rounded-lg p-4"
                             >
                                 {(() => {
                                     const activeTask = user.tasks.find(t => t.id === activeSession.taskId);
                                     return activeTask ? (
                                         <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <Badge variant="outline" className="text-blue-600 border-blue-300">
-                                                    Task
-                                                </Badge>
-                                                <span className="text-sm font-medium text-blue-900">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-1.5 h-1.5 rounded-full ${
+                                                    activeTask.priority === 'high' ? 'bg-[#FAFAFA]' :
+                                                    activeTask.priority === 'medium' ? 'bg-[#757373]' : 
+                                                    'bg-[#757373]/50'
+                                                }`} />
+                                                <span className="text-sm font-medium text-[#FAFAFA]">
                                                     {activeTask.title}
                                                 </span>
                                             </div>
-                                            <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
-                                                <Zap className="w-3 h-3 mr-1" />
-                                                {activeTask.xpReward} XP
-                                            </Badge>
+                                            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#FAFAFA]/10 rounded">
+                                                <Zap className="w-3 h-3 text-[#FAFAFA]" />
+                                                <span className="text-xs font-semibold text-[#FAFAFA]">
+                                                    {activeTask.xpReward} XP
+                                                </span>
+                                            </div>
                                         </div>
                                     ) : null;
                                 })()}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
-                    {/* Status Indicator */}
-                    <AnimatePresence>
-                        {activeSession && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 10 }}
-                                className="flex items-center justify-center gap-2"
-                            >
-                                <motion.div
-                                    className={`w-3 h-3 rounded-full ${isRunning
-                                        ? 'bg-green-500'
-                                        : isPaused
-                                            ? 'bg-orange-500'
-                                            : 'bg-gray-400'
-                                        }`}
-                                    animate={isRunning ? {
-                                        scale: [1, 1.2, 1],
-                                        opacity: [1, 0.7, 1],
-                                    } : {}}
-                                    transition={{
-                                        duration: 1.5,
-                                        repeat: isRunning ? Infinity : 0,
-                                        ease: 'easeInOut',
-                                    }}
-                                />
-                                <span className="text-sm font-medium text-gray-600">
-                                    {isRunning ? 'Recording...' : isPaused ? 'Paused' : 'Stopped'}
-                                </span>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -313,38 +312,38 @@ export function ActiveTimer({ className = '' }: ActiveTimerProps) {
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="border-t border-gray-200 pt-4"
+                                className="border-t border-[#757373]/10 pt-6 space-y-4"
                             >
-                                <div className="text-center space-y-3">
-                                    <p className="text-sm text-gray-600">
-                                        Start a focused session on one of your tasks:
-                                    </p>
-                                    <div className="flex flex-wrap gap-2 justify-center max-w-md mx-auto">
-                                        {user.tasks.slice(0, 3).map((task) => (
-                                            <motion.button
-                                                key={task.id}
-                                                whileHover={{ scale: 1.05 }}
-                                                whileTap={{ scale: 0.95 }}
-                                                onClick={() => startTimer(undefined, task.id, `Working on: ${task.title}`)}
-                                                className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition-colors duration-200"
-                                            >
-                                                <span className={`w-2 h-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' :
-                                                    task.priority === 'medium' ? 'bg-orange-500' : 'bg-green-500'
-                                                    }`} />
-                                                <span className="truncate max-w-24">
-                                                    {task.title}
-                                                </span>
-                                                <Badge variant="secondary" className="text-xs">
-                                                    {task.xpReward}
-                                                </Badge>
-                                            </motion.button>
-                                        ))}
-                                    </div>
+                                <p className="text-center text-sm text-[#757373]">
+                                    Quick start with a task
+                                </p>
+                                <div className="flex flex-wrap gap-2 justify-center">
+                                    {user.tasks.slice(0, 3).map((task) => (
+                                        <motion.button
+                                            key={task.id}
+                                            whileHover={{ scale: 1.02, y: -2 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            onClick={() => startTimer(undefined, task.id, `Working on: ${task.title}`)}
+                                            className="group flex items-center gap-2 px-4 py-2.5 bg-[#FAFAFA]/5 hover:bg-[#FAFAFA]/10 border border-[#757373]/20 hover:border-[#FAFAFA]/30 rounded-lg transition-all duration-200"
+                                        >
+                                            <div className={`w-1.5 h-1.5 rounded-full ${
+                                                task.priority === 'high' ? 'bg-[#FAFAFA]' :
+                                                task.priority === 'medium' ? 'bg-[#757373]' : 
+                                                'bg-[#757373]/50'
+                                            }`} />
+                                            <span className="text-sm font-medium text-[#FAFAFA] truncate max-w-32">
+                                                {task.title}
+                                            </span>
+                                            <span className="text-xs text-[#757373] group-hover:text-[#FAFAFA] transition-colors">
+                                                +{task.xpReward}
+                                            </span>
+                                        </motion.button>
+                                    ))}
                                 </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
-                </motion.div>
+                </div>
             </Card>
         </motion.div>
     );

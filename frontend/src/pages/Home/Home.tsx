@@ -47,10 +47,10 @@ export function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
             >
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-[#FAFAFA]">
                     {getGreeting()}{user?.username ? `, ${user.username}` : ''}! 👋
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-[#FAFAFA]">
                     Ready to level up your productivity? Let's make today count!
                 </p>
             </motion.div>
