@@ -191,9 +191,9 @@ export function ActiveTimer({ className = '' }: ActiveTimerProps) {
                              <Button
                                  onClick={handleStart}
                                  size="lg"
-                                 className="group relative overflow-hidden gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373]"
-                             >
-                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+                                 className="gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] hover:bg-white hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373] dark:hover:bg-zinc-900 dark:hover:shadow-[2px_2px_0px_0px_#757373] transition-all duration-200"
+                                 >
+                                 {/* <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[200%] group-hover:translate-x-[200%] transition-transform duration-700" /> */}
                                  <span className="relative flex items-center gap-2">
                                      <Play className="w-5 h-5" />
                                      Start Focus Session
@@ -213,7 +213,7 @@ export function ActiveTimer({ className = '' }: ActiveTimerProps) {
                                         onClick={handlePause}
                                         
                                         size="lg"
-                                        className="gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] hover:translate-x-1 hover:translate-y-1   hover:shadow-[2px_2px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373] dark:hover:shadow-[2px_2px_0px_0px_#757373]"
+                                        className="gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] hover:bg-white hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373] dark:hover:bg-zinc-900 dark:hover:shadow-[2px_2px_0px_0px_#757373] transition-all duration-200"
                                     >
                                         {isRunning ? (
                                             <span className="flex items-center gap-2">
@@ -231,7 +231,7 @@ export function ActiveTimer({ className = '' }: ActiveTimerProps) {
                                     <Button
                                         onClick={handleStop}
                                         size="lg"
-                                        className="gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] hover:translate-x-1 hover:translate-y-1  hover:shadow-[2px_2px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373] dark:hover:shadow-[2px_2px_0px_0px_#757373]"
+                                        className="gap-4 border-2 border-black bg-white text-black shadow-[4px_4px_0px_0px_#000] hover:bg-white hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#000] dark:border-white/20 dark:bg-zinc-900 dark:text-white dark:shadow-[4px_4px_0px_0px_#757373] dark:hover:bg-zinc-900 dark:hover:shadow-[2px_2px_0px_0px_#757373] transition-all duration-200"
                                     >
                                         <span className="flex items-center gap-2">
                                             <Square className="w-4 h-4" />
