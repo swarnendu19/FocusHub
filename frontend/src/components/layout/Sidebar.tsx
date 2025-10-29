@@ -90,7 +90,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-2">
+            <nav className="flex-1 p-4 space-y-1">
                 {navigationItems.map((item) => {
                     const isActive = location.pathname === item.href;
                     const Icon = item.icon;
@@ -102,7 +102,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                                 whileTap={{ scale: 0.98 }}
                                 onHoverStart={() => setHoveredItem(item.name)}
                                 onHoverEnd={() => setHoveredItem(null)}
-                                className="relative"
+                                className="relative mb-2"
                             >
                                 <div
                                     className={`
@@ -163,7 +163,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
             </nav>
 
             {/* Bottom Section */}
-            <div className="p-4 border-t border-gray-200 space-y-6">
+            <div className="p-4 border-t border-gray-200 space-y-1">
                 {bottomItems.map((item) => {
                     const Icon = item.icon;
 
@@ -174,7 +174,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                                 whileTap={{ scale: 0.98 }}
                                 onHoverStart={() => setHoveredItem(item.name)}
                                 onHoverEnd={() => setHoveredItem(null)}
-                                className="relative"
+                                className="relative mb-2"
                             >
                                 <div className="flex items-center space-x-3 px-3 py-2 rounded-lg text-[#FAFAFA] hover:text-gray-900 hover:bg-gray-100 transition-all duration-200">
                                     <Icon size={18} className="flex-shrink-0" />
