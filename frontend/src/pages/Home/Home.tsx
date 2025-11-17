@@ -10,7 +10,7 @@ import { MotivationalMessages } from '@/components/motivational';
 import { AchievementPreview } from '@/components/achievements';
 import { DailyGoalProgress } from '@/components/goals';
 import { useUserStore } from '@/stores/userStore';
-
+    
 export function Home() {
     const { user } = useUserStore();
 
