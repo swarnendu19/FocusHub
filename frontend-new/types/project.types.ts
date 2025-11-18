@@ -236,3 +236,10 @@ export function isCompletedTask(task: Task): boolean {
 export function isHighPriorityTask(task: Task): boolean {
   return task.priority === TaskPriority.HIGH || task.priority === TaskPriority.URGENT;
 }
+
+/**
+ * Type aliases for hooks compatibility
+ */
+export type ProjectFilters = ProjectFilter;
+export type TaskFilters = TaskFilter;
+
