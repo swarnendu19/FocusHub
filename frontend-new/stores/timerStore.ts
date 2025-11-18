@@ -8,9 +8,17 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { STORAGE_KEYS, TIMER } from "@/config";
 import { TimerStatus, SessionType } from "@/types";
-import type { TimerState } from "@/types";
+import type { TimerState, TimerSession } from "@/types";
 
 interface TimerStore extends TimerState {
+  // Additional properties for hook compatibility
+  currentTimer: TimerSession | null;
+  timerState: 'idle' | 'running' | 'paused';
+  elapsedTime: number;
+  sessionHistory: TimerSession[];
+  isLoading: boolean;
+  error: string | null;
+
   // Actions
   startTimer: (duration: number, sessionType: SessionType, projectId?: string, taskId?: string) => void;
   pauseTimer: () => void;
@@ -21,6 +29,16 @@ interface TimerStore extends TimerState {
   setProject: (projectId: string | null) => void;
   setTask: (taskId: string | null) => void;
   completeSession: () => void;
+
+  // Additional actions for hook compatibility
+  setCurrentTimer: (session: TimerSession | null) => void;
+  setTimerState: (state: 'idle' | 'running' | 'paused') => void;
+  setElapsedTime: (seconds: number) => void;
+  incrementElapsedTime: () => void;
+  addToHistory: (session: TimerSession) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  clearTimer: () => void;
 
   // Computed
   getProgress: () => number;
@@ -46,6 +64,13 @@ export const useTimerStore = create<TimerStore>()(
   persist(
     (set, get) => ({
       ...initialState,
+      // Initialize hook-compatible properties
+      currentTimer: null,
+      timerState: 'idle' as const,
+      elapsedTime: 0,
+      sessionHistory: [],
+      isLoading: false,
+      error: null,
 
       startTimer: (duration, sessionType, projectId, taskId) => {
         const now = new Date();
@@ -138,6 +163,46 @@ export const useTimerStore = create<TimerStore>()(
       isRunning: () => get().status === TimerStatus.RUNNING,
       isPaused: () => get().status === TimerStatus.PAUSED,
       isIdle: () => get().status === TimerStatus.IDLE,
+
+      // Hook-compatible actions
+      setCurrentTimer: (session) => {
+        set({ currentTimer: session });
+      },
+
+      setTimerState: (state) => {
+        set({ timerState: state });
+      },
+
+      setElapsedTime: (seconds) => {
+        set({ elapsedTime: seconds });
+      },
+
+      incrementElapsedTime: () => {
+        const state = get();
+        set({ elapsedTime: state.elapsedTime + 1 });
+      },
+
+      addToHistory: (session) => {
+        const history = get().sessionHistory;
+        set({ sessionHistory: [session, ...history] });
+      },
+
+      setLoading: (loading) => {
+        set({ isLoading: loading });
+      },
+
+      setError: (error) => {
+        set({ error, isLoading: false });
+      },
+
+      clearTimer: () => {
+        set({
+          currentTimer: null,
+          timerState: 'idle',
+          elapsedTime: 0,
+          status: TimerStatus.IDLE,
+        });
+      },
     }),
     {
       name: STORAGE_KEYS.TIMER_STATE,
