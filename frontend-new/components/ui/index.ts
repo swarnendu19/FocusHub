@@ -64,3 +64,44 @@ export type { BadgeProps } from "./Badge";
 
 // Tabs
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./Tabs";
+
+// Dropdown Menu
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+} from "./Dropdown";
+
+// Tooltip
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "./Tooltip";
+
+// TextArea
+export { TextArea } from "./TextArea";
+export type { TextAreaProps } from "./TextArea";
+
+// Radio
+export { RadioGroup, RadioGroupItem } from "./Radio";
+
+// Switch
+export { Switch } from "./Switch";
+
+// DatePicker
+export { DatePicker } from "./DatePicker";
+export type { DatePickerProps } from "./DatePicker";

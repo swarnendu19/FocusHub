@@ -291,3 +291,51 @@ export function encodeUrl(str: string): string {
 export function decodeUrl(str: string): string {
   return decodeURIComponent(str);
 }
+
+/**
+ * Format duration in seconds to human-readable format (HH:MM:SS or MM:SS)
+ */
+export function formatDuration(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
+
+  return `${minutes}:${secs.toString().padStart(2, "0")}`;
+}
+
+/**
+ * Format date to a specific format string
+ * Supported formats: "MMM DD, YYYY", "MM/DD/YYYY", "YYYY-MM-DD", etc.
+ */
+export function formatDate(date: Date | string, format: string = "MMM DD, YYYY"): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+
+  const replacements: Record<string, string> = {
+    "YYYY": year.toString(),
+    "YY": year.toString().slice(-2),
+    "MMMM": fullMonths[d.getMonth()],
+    "MMM": months[d.getMonth()],
+    "MM": month.toString().padStart(2, "0"),
+    "M": month.toString(),
+    "DD": day.toString().padStart(2, "0"),
+    "D": day.toString(),
+  };
+
+  let formatted = format;
+  Object.keys(replacements).forEach((key) => {
+    formatted = formatted.replace(key, replacements[key]);
+  });
+
+  return formatted;
+}

@@ -100,6 +100,7 @@ export interface RegisterCredentials {
   password: string;
   username: string;
   displayName: string;
+  acceptTerms?: boolean;
 }
 
 export interface GoogleAuthPayload {

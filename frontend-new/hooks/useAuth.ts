@@ -108,7 +108,7 @@ export function useAuth() {
         setLoading(true);
         setError(null);
 
-        const response = await authService.googleAuth(payload);
+        const response = await authService.googleAuth(payload.code);
 
         // Set user data and token
         setUser(response.user, response.token);
@@ -170,7 +170,11 @@ export function useAuth() {
       setError(null);
 
       const userData = await authService.getProfile();
-      setUser(userData, useUserStore.getState().token);
+      const currentToken = useUserStore.getState().token;
+
+      if (currentToken) {
+        setUser(userData, currentToken);
+      }
 
       return userData;
     } catch (err) {
@@ -192,14 +196,9 @@ export function useAuth() {
         setLoading(true);
         setError(null);
 
-        const updatedUser = await authService.updatePreferences(preferences);
+        const updatedPrefs = await authService.updatePreferences(preferences as any);
 
-        // Update user in store
-        if (user) {
-          setUser(updatedUser, useUserStore.getState().token);
-        }
-
-        return updatedUser;
+        return updatedPrefs;
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Failed to update preferences";
@@ -209,7 +208,7 @@ export function useAuth() {
         setLoading(false);
       }
     },
-    [user, setUser, setLoading, setError]
+    [setLoading, setError]
   );
 
   /**

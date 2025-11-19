@@ -61,16 +61,20 @@ export interface TimerSession {
   sessionType: SessionType;
   duration: number; // actual duration in seconds
   plannedDuration: number; // planned duration in seconds
+  actualDuration?: number; // Alias for duration
+  pausedDuration?: number; // Time spent paused
   startTime: Date;
-  endTime: Date;
-  projectId?: string;
-  taskId?: string;
+  endTime: Date | null;
+  projectId?: string | null;
+  taskId?: string | null;
   tags?: string[];
   notes?: string;
+  description?: string | null; // Alias for notes
   xpEarned: number;
   completed: boolean;
   interrupted: boolean;
   interruptionCount: number;
+  status?: string; // Timer status
   createdAt: Date;
   updatedAt: Date;
 }

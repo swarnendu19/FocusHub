@@ -118,3 +118,10 @@ export async function confirmPasswordReset(data: PasswordResetConfirmation): Pro
 export async function deleteAccount(password: string): Promise<void> {
   return post<void>("/user/delete-account", { password });
 }
+
+/**
+ * Hook-compatible aliases
+ */
+export const googleAuth = loginWithGoogle;
+export const getProfile = getUserProfile;
+export const updatePreferences = updateUserPreferences;

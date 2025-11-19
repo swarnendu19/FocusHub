@@ -177,3 +177,9 @@ export async function updateTag(tagId: string, updates: { name?: string; color?:
 export async function deleteTag(tagId: string): Promise<void> {
   return del<void>(`/tags/${tagId}`);
 }
+
+/**
+ * Hook-compatible aliases
+ */
+export const getAllProjects = getProjects;
+

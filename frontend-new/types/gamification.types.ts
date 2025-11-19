@@ -123,8 +123,10 @@ export interface XPTransaction {
   amount: number; // positive or negative
   source: string; // e.g., "session_completed", "achievement_unlocked"
   description: string;
+  reason?: string; // Alias for description
   metadata?: Record<string, unknown>;
   createdAt: Date;
+  timestamp?: Date; // Alias for createdAt
 }
 
 /**
