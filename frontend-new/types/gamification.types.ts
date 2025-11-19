@@ -267,3 +267,17 @@ export function isSkillMaxed(skill: UserSkill): boolean {
 export function isStreakActive(streak: Streak): boolean {
   return streak.streakActive && streak.currentStreak > 0;
 }
+
+/**
+ * Type aliases for hooks compatibility
+ */
+export type XPGain = XPTransaction;
+export type Skill = SkillNode;
+
+/**
+ * Skill unlock payload for API requests
+ */
+export interface SkillUnlockPayload {
+  skillNodeId: string;
+  currentLevel?: number;
+}

@@ -88,6 +88,25 @@ export enum HttpStatusCode {
 }
 
 /**
+ * Authentication API request payloads
+ */
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  email: string;
+  password: string;
+  username: string;
+  displayName: string;
+}
+
+export interface GoogleAuthPayload {
+  code: string;
+}
+
+/**
  * Authentication API responses
  */
 export interface LoginResponse {
@@ -98,11 +117,7 @@ export interface LoginResponse {
     displayName: string;
     avatar?: string;
   };
-  token: {
-    accessToken: string;
-    refreshToken: string;
-    expiresAt: string;
-  };
+  token: string;
 }
 
 export interface RegisterResponse {
@@ -112,7 +127,7 @@ export interface RegisterResponse {
     username: string;
     displayName: string;
   };
-  message: string;
+  token: string;
 }
 
 export interface RefreshTokenResponse {
