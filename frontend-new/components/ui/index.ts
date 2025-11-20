@@ -105,3 +105,6 @@ export { Switch } from "./Switch";
 // DatePicker
 export { DatePicker } from "./DatePicker";
 export type { DatePickerProps } from "./DatePicker";
+
+// Optimized Images
+export { OptimizedImage, AvatarImage, LogoImage } from "./OptimizedImage";
