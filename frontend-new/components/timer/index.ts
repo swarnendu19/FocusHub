@@ -8,3 +8,7 @@ export { TimerDisplay } from "./TimerDisplay";
 export { TimerControls } from "./TimerControls";
 export { TimerHistory } from "./TimerHistory";
 export { TaskTimer } from "./TaskTimer";
+export {
+  TimerNotifications,
+  TimerNotificationsSettings,
+} from "./TimerNotifications";
