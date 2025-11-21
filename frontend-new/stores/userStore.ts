@@ -15,12 +15,13 @@ interface UserStore extends AuthState {
   preferences: UserPreferences | null;
 
   // Actions
-  setUser: (user: User, token: AuthToken) => void;
+  setUser: (user: Partial<User>, token: AuthToken | string) => void;
   updateUser: (updates: Partial<User>) => void;
   setStats: (stats: UserStats) => void;
   setPreferences: (preferences: UserPreferences) => void;
   updatePreferences: (updates: Partial<UserPreferences>) => void;
   logout: () => void;
+  clearUser: () => void; // Alias for logout
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
   clearError: () => void;
@@ -47,9 +48,34 @@ export const useUserStore = create<UserStore>()(
       preferences: null,
 
       setUser: (user, token) => {
+        // Handle both string token and AuthToken object
+        const authToken: AuthToken = typeof token === 'string'
+          ? {
+              accessToken: token,
+              refreshToken: '',
+              expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+              tokenType: 'Bearer',
+            }
+          : token;
+
+        // Fill in required User fields if not provided
+        const fullUser: User = {
+          id: user.id || '',
+          email: user.email || '',
+          username: user.username || '',
+          displayName: user.displayName || '',
+          avatar: user.avatar,
+          bio: user.bio,
+          role: user.role || 'user' as any,
+          authProvider: user.authProvider || 'email' as any,
+          createdAt: user.createdAt || new Date(),
+          updatedAt: user.updatedAt || new Date(),
+          lastLoginAt: user.lastLoginAt,
+        };
+
         set({
-          user,
-          token,
+          user: fullUser,
+          token: authToken,
           isAuthenticated: true,
           isLoading: false,
           error: null,
@@ -83,6 +109,15 @@ export const useUserStore = create<UserStore>()(
       },
 
       logout: () => {
+        set({
+          ...initialState,
+          stats: null,
+          preferences: null,
+        });
+      },
+
+      clearUser: () => {
+        // Alias for logout
         set({
           ...initialState,
           stats: null,

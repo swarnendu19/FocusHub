@@ -56,7 +56,9 @@ export function useProjects() {
         setLoading(true);
         setError(null);
 
-        const projectList = await projectService.getAllProjects(filters);
+        const response = await projectService.getAllProjects(filters);
+        // Unwrap PaginatedResponse
+        const projectList = response.data;
         setProjects(projectList);
 
         return projectList;
@@ -182,7 +184,9 @@ export function useProjects() {
         setLoading(true);
         setError(null);
 
-        const taskList = await projectService.getTasks(projectId, filters);
+        const response = await projectService.getTasks(projectId, filters);
+        // Unwrap PaginatedResponse
+        const taskList = response.data;
         setTasks(taskList);
 
         return taskList;
@@ -302,7 +306,7 @@ export function useProjects() {
         setLoading(true);
         setError(null);
 
-        const newTag = await projectService.createTag(name, color);
+        const newTag = await projectService.createTag({ name, color: color || '#000000' });
 
         // Refresh tags
         await fetchTags();

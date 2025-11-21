@@ -148,3 +148,22 @@ export async function exportTimeData(params: {
   const response = await get<Blob>("/timer/export", params);
   return response;
 }
+
+/**
+ * Get active timer session
+ */
+export async function getActiveTimer(): Promise<TimerSession | null> {
+  try {
+    return await get<TimerSession>("/timer/active");
+  } catch (error) {
+    // Return null if no active timer
+    return null;
+  }
+}
+
+/**
+ * Hook-compatible aliases
+ */
+export const getHistory = getTimerHistory;
+export const getStatistics = getSessionStatistics;
+export const updateTimer = updateSession;

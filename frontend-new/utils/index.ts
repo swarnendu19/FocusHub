@@ -14,3 +14,6 @@ export * from "./format";
 
 // Validation utilities
 export * from "./validation";
+
+// Performance utilities
+export * from "./performance";

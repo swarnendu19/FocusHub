@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ServiceWorkerRegistration, PWAInstallPrompt } from "@/components/pwa";
+import { WebVitals } from "./web-vitals";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +26,15 @@ export const metadata: Metadata = {
   authors: [{ name: "FocusHub Team" }],
   creator: "FocusHub",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  applicationName: "FocusHub",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "FocusHub",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -44,6 +55,17 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#1C1C1C" },
+    { media: "(prefers-color-scheme: dark)", color: "#FFFFFF" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -51,10 +73,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* PWA Meta Tags */}
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#1C1C1C" />
+        <meta name="msapplication-tap-highlight" content="no" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         {children}
+        <WebVitals />
+        <ServiceWorkerRegistration />
+        <PWAInstallPrompt />
       </body>
     </html>
   );

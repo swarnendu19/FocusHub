@@ -5,13 +5,15 @@
  */
 
 import { create } from "zustand";
-import type { Project, Task, ProjectFilter, TaskFilter } from "@/types";
+import type { Project, Task, ProjectFilter, TaskFilter, Tag } from "@/types";
 
 interface ProjectStore {
   // State
   projects: Project[];
   tasks: Task[];
+  tags: Tag[];
   selectedProjectId: string | null;
+  selectedProject: Project | null;
   selectedTaskId: string | null;
   projectFilter: ProjectFilter;
   taskFilter: TaskFilter;
@@ -23,14 +25,21 @@ interface ProjectStore {
   addProject: (project: Project) => void;
   updateProject: (id: string, updates: Partial<Project>) => void;
   deleteProject: (id: string) => void;
+  removeProject: (id: string) => void; // Alias for deleteProject
   selectProject: (id: string | null) => void;
+  setSelectedProject: (project: Project | null) => void;
 
   // Task actions
   setTasks: (tasks: Task[]) => void;
   addTask: (task: Task) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
   deleteTask: (id: string) => void;
+  removeTask: (id: string) => void; // Alias for deleteTask
   selectTask: (id: string | null) => void;
+
+  // Tag actions
+  setTags: (tags: Tag[]) => void;
+  addTag: (tag: Tag) => void;
 
   // Filter actions
   setProjectFilter: (filter: Partial<ProjectFilter>) => void;
@@ -47,8 +56,8 @@ interface ProjectStore {
   getTaskById: (id: string) => Task | undefined;
   getTasksByProject: (projectId: string) => Task[];
   getActiveProjects: () => Project[];
-  getFilteredProjects: () => Project[];
-  getFilteredTasks: () => Task[];
+  getFilteredProjects: (filter?: ProjectFilter) => Project[];
+  getFilteredTasks: (filter?: TaskFilter) => Task[];
 }
 
 const initialFilter: ProjectFilter = {
@@ -73,7 +82,9 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   // Initial state
   projects: [],
   tasks: [],
+  tags: [],
   selectedProjectId: null,
+  selectedProject: null,
   selectedTaskId: null,
   projectFilter: initialFilter,
   taskFilter: initialTaskFilter,
@@ -100,9 +111,25 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
       projects: state.projects.filter((p) => p.id !== id),
       tasks: state.tasks.filter((t) => t.projectId !== id),
       selectedProjectId: state.selectedProjectId === id ? null : state.selectedProjectId,
+      selectedProject: state.selectedProjectId === id ? null : state.selectedProject,
     })),
 
-  selectProject: (id) => set({ selectedProjectId: id }),
+  removeProject: (id) => {
+    // Alias for deleteProject
+    get().deleteProject(id);
+  },
+
+  selectProject: (id) => {
+    const project = id ? get().getProjectById(id) : null;
+    set({ selectedProjectId: id, selectedProject: project || null });
+  },
+
+  setSelectedProject: (project) => {
+    set({
+      selectedProject: project,
+      selectedProjectId: project?.id || null,
+    });
+  },
 
   // Task actions
   setTasks: (tasks) => set({ tasks }),
@@ -125,7 +152,20 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
       selectedTaskId: state.selectedTaskId === id ? null : state.selectedTaskId,
     })),
 
+  removeTask: (id) => {
+    // Alias for deleteTask
+    get().deleteTask(id);
+  },
+
   selectTask: (id) => set({ selectedTaskId: id }),
+
+  // Tag actions
+  setTags: (tags) => set({ tags }),
+
+  addTag: (tag) =>
+    set((state) => ({
+      tags: [...state.tags, tag],
+    })),
 
   // Filter actions
   setProjectFilter: (filter) =>
@@ -160,25 +200,26 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   getActiveProjects: () =>
     get().projects.filter((p) => p.status === "active"),
 
-  getFilteredProjects: () => {
+  getFilteredProjects: (filter) => {
     const { projects, projectFilter } = get();
+    const activeFilter = filter || projectFilter;
     let filtered = [...projects];
 
     // Filter by status
-    if (projectFilter.status && projectFilter.status.length > 0) {
-      filtered = filtered.filter((p) => projectFilter.status!.includes(p.status));
+    if (activeFilter.status && activeFilter.status.length > 0) {
+      filtered = filtered.filter((p) => activeFilter.status!.includes(p.status));
     }
 
     // Filter by tags
-    if (projectFilter.tags && projectFilter.tags.length > 0) {
+    if (activeFilter.tags && activeFilter.tags.length > 0) {
       filtered = filtered.filter((p) =>
-        projectFilter.tags!.some((tag) => p.tags.includes(tag))
+        activeFilter.tags!.some((tag) => p.tags.includes(tag))
       );
     }
 
     // Filter by search
-    if (projectFilter.search) {
-      const search = projectFilter.search.toLowerCase();
+    if (activeFilter.search) {
+      const search = activeFilter.search.toLowerCase();
       filtered = filtered.filter(
         (p) =>
           p.name.toLowerCase().includes(search) ||
@@ -187,14 +228,14 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
     }
 
     // Sort
-    if (projectFilter.sortBy) {
+    if (activeFilter.sortBy) {
       filtered.sort((a, b) => {
-        const aValue = a[projectFilter.sortBy as keyof Project];
-        const bValue = b[projectFilter.sortBy as keyof Project];
+        const aValue = a[activeFilter.sortBy as keyof Project];
+        const bValue = b[activeFilter.sortBy as keyof Project];
 
         if (!aValue || !bValue) return 0;
-        if (aValue < bValue) return projectFilter.sortOrder === "asc" ? -1 : 1;
-        if (aValue > bValue) return projectFilter.sortOrder === "asc" ? 1 : -1;
+        if (aValue < bValue) return activeFilter.sortOrder === "asc" ? -1 : 1;
+        if (aValue > bValue) return activeFilter.sortOrder === "asc" ? 1 : -1;
         return 0;
       });
     }
@@ -202,35 +243,36 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
     return filtered;
   },
 
-  getFilteredTasks: () => {
+  getFilteredTasks: (filter) => {
     const { tasks, taskFilter } = get();
+    const activeFilter = filter || taskFilter;
     let filtered = [...tasks];
 
     // Filter by project
-    if (taskFilter.projectId) {
-      filtered = filtered.filter((t) => t.projectId === taskFilter.projectId);
+    if (activeFilter.projectId) {
+      filtered = filtered.filter((t) => t.projectId === activeFilter.projectId);
     }
 
     // Filter by status
-    if (taskFilter.status && taskFilter.status.length > 0) {
-      filtered = filtered.filter((t) => taskFilter.status!.includes(t.status));
+    if (activeFilter.status && activeFilter.status.length > 0) {
+      filtered = filtered.filter((t) => activeFilter.status!.includes(t.status));
     }
 
     // Filter by priority
-    if (taskFilter.priority && taskFilter.priority.length > 0) {
-      filtered = filtered.filter((t) => taskFilter.priority!.includes(t.priority));
+    if (activeFilter.priority && activeFilter.priority.length > 0) {
+      filtered = filtered.filter((t) => activeFilter.priority!.includes(t.priority));
     }
 
     // Filter by tags
-    if (taskFilter.tags && taskFilter.tags.length > 0) {
+    if (activeFilter.tags && activeFilter.tags.length > 0) {
       filtered = filtered.filter((t) =>
-        taskFilter.tags!.some((tag) => t.tags.includes(tag))
+        activeFilter.tags!.some((tag) => t.tags.includes(tag))
       );
     }
 
     // Filter by search
-    if (taskFilter.search) {
-      const search = taskFilter.search.toLowerCase();
+    if (activeFilter.search) {
+      const search = activeFilter.search.toLowerCase();
       filtered = filtered.filter(
         (t) =>
           t.title.toLowerCase().includes(search) ||
@@ -239,14 +281,14 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
     }
 
     // Sort
-    if (taskFilter.sortBy) {
+    if (activeFilter.sortBy) {
       filtered.sort((a, b) => {
-        const aValue = a[taskFilter.sortBy as keyof Task];
-        const bValue = b[taskFilter.sortBy as keyof Task];
+        const aValue = a[activeFilter.sortBy as keyof Task];
+        const bValue = b[activeFilter.sortBy as keyof Task];
 
         if (!aValue || !bValue) return 0;
-        if (aValue < bValue) return taskFilter.sortOrder === "asc" ? -1 : 1;
-        if (aValue > bValue) return taskFilter.sortOrder === "asc" ? 1 : -1;
+        if (aValue < bValue) return activeFilter.sortOrder === "asc" ? -1 : 1;
+        if (aValue > bValue) return activeFilter.sortOrder === "asc" ? 1 : -1;
         return 0;
       });
     }

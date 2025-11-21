@@ -12,6 +12,7 @@ import type {
   LeaderboardEntry,
   DailyChallenge,
   Streak,
+  XPGain,
 } from "@/types";
 
 interface AchievementStore {
@@ -24,6 +25,11 @@ interface AchievementStore {
   streak: Streak | null;
   isLoading: boolean;
   error: string | null;
+
+  // Hook-compatible properties
+  xpHistory: XPGain[];
+  currentStreak: number;
+  longestStreak: number;
 
   // Achievement actions
   setAchievements: (achievements: UserAchievement[]) => void;
@@ -55,6 +61,10 @@ interface AchievementStore {
   incrementStreak: () => void;
   breakStreak: () => void;
   useStreakFreeze: () => void;
+  updateStreak: (current: number, longest: number) => void;
+
+  // Hook-compatible actions
+  addXPGain: (xp: XPGain) => void;
 
   // Utility actions
   setLoading: (isLoading: boolean) => void;
@@ -82,6 +92,9 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
   streak: null,
   isLoading: false,
   error: null,
+  xpHistory: [],
+  currentStreak: 0,
+  longestStreak: 0,
 
   // Achievement actions
   setAchievements: (achievements) => set({ achievements }),
@@ -251,6 +264,22 @@ export const useAchievementStore = create<AchievementStore>((set, get) => ({
         freezesAvailable: current.freezesAvailable - 1,
       },
     });
+  },
+
+  updateStreak: (current, longest) => {
+    set({
+      currentStreak: current,
+      longestStreak: longest,
+    });
+  },
+
+  // Hook-compatible actions
+  addXPGain: (xp) => {
+    const history = get().xpHistory;
+    set({ xpHistory: [xp, ...history] });
+
+    // Also add to level progression
+    get().addXP(xp.amount);
   },
 
   // Utility actions

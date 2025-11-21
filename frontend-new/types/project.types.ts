@@ -243,3 +243,12 @@ export function isHighPriorityTask(task: Task): boolean {
 export type ProjectFilters = ProjectFilter;
 export type TaskFilters = TaskFilter;
 
+
+/**
+ * Type aliases for hooks compatibility  
+ */
+export type CreateProjectPayload = CreateProjectData;
+export type UpdateProjectPayload = UpdateProjectData;
+export type CreateTaskPayload = CreateTaskData;
+export type UpdateTaskPayload = UpdateTaskData;
+

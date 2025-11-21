@@ -15,10 +15,14 @@ import { useCallback, useEffect } from "react";
 import { useAchievementStore } from "@/stores";
 import type {
   Achievement,
-  XPGain,
-  Skill,
+  UserAchievement,
+  XPTransaction,
+  SkillNode,
+  UserSkill,
   LeaderboardEntry,
-  SkillUnlockPayload,
+  AchievementCategory,
+  AchievementRarity,
+  SkillCategory,
 } from "@/types";
 
 export function useAchievements() {

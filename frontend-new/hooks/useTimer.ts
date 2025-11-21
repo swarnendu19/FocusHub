@@ -10,7 +10,7 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useTimerStore } from "@/stores";
 import { timerService } from "@/services";
-import type { TimerSession, TimerState } from "@/types";
+import type { TimerSession } from "@/types";
 import { TIMER } from "@/config";
 
 export function useTimer() {
@@ -46,16 +46,37 @@ export function useTimer() {
         setError(null);
 
         const response = await timerService.startTimer({
+          duration: TIMER.DEFAULT_WORK_DURATION,
+          sessionType: 'work',
           projectId,
           taskId,
-          description,
         });
 
-        setCurrentTimer(response);
+        // Convert StartTimerResponse to TimerSession
+        const session: TimerSession = {
+          id: response.sessionId,
+          userId: '', // Will be filled by backend
+          sessionType: response.sessionType as any,
+          startTime: new Date(response.startTime),
+          endTime: null,
+          plannedDuration: response.duration,
+          actualDuration: 0,
+          pausedDuration: 0,
+          projectId: projectId || null,
+          taskId: taskId || null,
+          tags: [],
+          description: description || null,
+          completed: false,
+          xpEarned: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        setCurrentTimer(session);
         setTimerState("running");
         setElapsedTime(0);
 
-        return response;
+        return session;
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Failed to start timer";
@@ -82,13 +103,23 @@ export function useTimer() {
 
       const response = await timerService.stopTimer(currentTimer.id);
 
+      // Convert StopTimerResponse to TimerSession for history
+      const completedSession: TimerSession = {
+        ...currentTimer,
+        endTime: new Date(),
+        actualDuration: response.duration,
+        completed: response.completed,
+        xpEarned: response.xpEarned,
+        updatedAt: new Date(),
+      };
+
       // Add to history
-      addToHistory(response);
+      addToHistory(completedSession);
 
       // Clear current timer
       clearTimer();
 
-      return response;
+      return completedSession;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to stop timer";
@@ -111,12 +142,12 @@ export function useTimer() {
       setLoading(true);
       setError(null);
 
-      const response = await timerService.pauseTimer(currentTimer.id);
+      await timerService.pauseTimer(currentTimer.id);
 
-      setCurrentTimer(response);
+      // Update local state
       setTimerState("paused");
 
-      return response;
+      return currentTimer;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to pause timer";
@@ -125,7 +156,7 @@ export function useTimer() {
     } finally {
       setLoading(false);
     }
-  }, [currentTimer, setCurrentTimer, setTimerState, setLoading, setError]);
+  }, [currentTimer, setTimerState, setLoading, setError]);
 
   /**
    * Resume a paused timer
@@ -139,12 +170,12 @@ export function useTimer() {
       setLoading(true);
       setError(null);
 
-      const response = await timerService.resumeTimer(currentTimer.id);
+      await timerService.resumeTimer(currentTimer.id);
 
-      setCurrentTimer(response);
+      // Update local state
       setTimerState("running");
 
-      return response;
+      return currentTimer;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to resume timer";
@@ -153,7 +184,7 @@ export function useTimer() {
     } finally {
       setLoading(false);
     }
-  }, [currentTimer, setCurrentTimer, setTimerState, setLoading, setError]);
+  }, [currentTimer, setTimerState, setLoading, setError]);
 
   /**
    * Fetch timer history
@@ -168,7 +199,10 @@ export function useTimer() {
         setLoading(true);
         setError(null);
 
-        const history = await timerService.getHistory(filters);
+        const response = await timerService.getHistory();
+
+        // Unwrap PaginatedResponse
+        const history = response.data;
 
         // Update store with history
         useTimerStore.setState({ sessionHistory: history });
@@ -195,7 +229,7 @@ export function useTimer() {
         setLoading(true);
         setError(null);
 
-        const stats = await timerService.getStatistics(period);
+        const stats = await timerService.getStatistics();
 
         return stats;
       } catch (err) {
@@ -274,13 +308,13 @@ export function useTimer() {
           try {
             // Update timer on server with current elapsed time
             await timerService.updateTimer(currentTimer.id, {
-              elapsedSeconds: elapsedTime,
+              actualDuration: elapsedTime,
             });
           } catch (err) {
             console.error("Auto-save failed:", err);
           }
         },
-        TIMER.AUTO_SAVE_INTERVAL || 30000
+        30000 // 30 seconds
       );
 
       return () => clearInterval(autoSaveInterval);
