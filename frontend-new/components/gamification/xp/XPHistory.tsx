@@ -10,7 +10,7 @@
 import * as React from "react";
 import { cn } from "@/utils";
 import { useAchievements } from "@/hooks";
-import { formatDate, formatXP } from "@/utils/format";
+import { formatDate } from "@/utils/format";
 import { Card, CardHeader, CardTitle, CardContent, Badge } from "@/components/ui";
 import type { XPTransaction } from "@/types";
 
@@ -279,7 +279,7 @@ function XPTransactionItem({ transaction }: XPTransactionItemProps) {
 
       {/* Right: XP Amount */}
       <Badge
-        variant={isPositive ? "default" : "destructive"}
+        variant={isPositive ? "default" : "error"}
         className="text-sm font-semibold"
       >
         {isPositive ? "+" : ""}

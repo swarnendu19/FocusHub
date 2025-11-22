@@ -7,7 +7,6 @@
 
 "use client";
 
-import * as React from "react";
 import { cn } from "@/utils";
 import {
   Dialog,
@@ -17,7 +16,6 @@ import {
   DialogDescription,
   DialogFooter,
   Button,
-  Badge,
 } from "@/components/ui";
 
 interface LevelUpModalProps {

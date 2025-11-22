@@ -24,12 +24,16 @@ export interface ProgressProps
    * Color variant
    */
   variant?: "default" | "success" | "warning" | "error";
+  /**
+   * Custom className for the indicator
+   */
+  indicatorClassName?: string;
 }
 
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   ProgressProps
->(({ className, value = 0, showLabel, variant = "default", ...props }, ref) => {
+>(({ className, value = 0, showLabel, variant = "default", indicatorClassName, ...props }, ref) => {
   const variants = {
     default: "bg-[#1C1C1C] dark:bg-white",
     success: "bg-green-600",
@@ -50,7 +54,7 @@ const Progress = React.forwardRef<
         <ProgressPrimitive.Indicator
           className={cn(
             "h-full w-full flex-1 transition-all duration-300",
-            variants[variant]
+            indicatorClassName || variants[variant]
           )}
           style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
         />

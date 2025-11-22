@@ -7,7 +7,6 @@
 
 "use client";
 
-import * as React from "react";
 import { cn } from "@/utils";
 import { formatDate } from "@/utils/format";
 import { Badge, Progress } from "@/components/ui";
@@ -40,7 +39,7 @@ export function AchievementCard({
 }: AchievementCardProps) {
   const isUnlocked = achievement.unlockedAt !== null;
   const progress = achievement.progress || 0;
-  const target = achievement.target || 100;
+  const target = achievement.achievement.requirement.value || 100;
   const progressPercentage = (progress / target) * 100;
 
   const sizeClasses = {
@@ -128,15 +127,15 @@ export function AchievementCard({
           </div>
 
           {/* Rarity Badge */}
-          {achievement.rarity && (
+          {achievement.achievement.rarity && (
             <Badge
               variant={isUnlocked ? "default" : "outline"}
               className={cn(
                 "text-xs",
-                getRarityColor(achievement.rarity)
+                getRarityColor(achievement.achievement.rarity)
               )}
             >
-              {achievement.rarity}
+              {achievement.achievement.rarity}
             </Badge>
           )}
         </div>
@@ -152,7 +151,7 @@ export function AchievementCard({
               textSizeClasses[size]
             )}
           >
-            {achievement.name}
+            {achievement.achievement.name}
           </h3>
           <p
             className={cn(
@@ -160,7 +159,7 @@ export function AchievementCard({
               size === "sm" ? "text-xs" : "text-sm"
             )}
           >
-            {achievement.description}
+            {achievement.achievement.description}
           </p>
         </div>
 
@@ -188,9 +187,9 @@ export function AchievementCard({
               </span>
             </div>
 
-            {achievement.xpReward && (
+            {achievement.achievement.xpReward && (
               <Badge variant="outline" className="text-xs">
-                +{achievement.xpReward} XP
+                +{achievement.achievement.xpReward} XP
               </Badge>
             )}
           </div>

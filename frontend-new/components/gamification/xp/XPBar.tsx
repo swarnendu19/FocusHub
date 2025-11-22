@@ -6,7 +6,6 @@
 
 "use client";
 
-import * as React from "react";
 import { cn } from "@/utils";
 import { useAchievements } from "@/hooks";
 import { Progress } from "@/components/ui";

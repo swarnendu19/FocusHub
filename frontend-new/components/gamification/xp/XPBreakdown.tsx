@@ -35,7 +35,7 @@ export function XPBreakdown({
   className,
   period = "week",
 }: XPBreakdownProps) {
-  const { xpHistory, totalXP, isLoading } = useAchievements();
+  const { xpHistory, isLoading } = useAchievements();
 
   // Calculate XP breakdown by source
   const breakdown = React.useMemo(() => {

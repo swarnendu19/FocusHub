@@ -319,14 +319,14 @@ export function useAchievements() {
    * Get unlocked achievements
    */
   const getUnlockedAchievements = useCallback(() => {
-    return achievements.filter((a) => a.unlocked);
+    return achievements.filter((a) => a.isUnlocked);
   }, [achievements]);
 
   /**
    * Get locked achievements
    */
   const getLockedAchievements = useCallback(() => {
-    return achievements.filter((a) => !a.unlocked);
+    return achievements.filter((a) => !a.isUnlocked);
   }, [achievements]);
 
   /**
@@ -334,31 +334,57 @@ export function useAchievements() {
    */
   const getAchievementsByCategory = useCallback(
     (category: string) => {
-      return achievements.filter((a) => a.category === category);
+      return achievements.filter((a) => a.achievement.category === category);
     },
     [achievements]
   );
 
   /**
+   * Get level progression data
+   */
+  const levelProgression = useAchievementStore((state) => state.levelProgression);
+
+  /**
    * Get total XP
    */
   const getTotalXP = useCallback(() => {
-    return useAchievementStore.getState().totalXP;
-  }, []);
+    return levelProgression?.totalXP || 0;
+  }, [levelProgression]);
 
   /**
    * Get current level
    */
   const getCurrentLevel = useCallback(() => {
-    return useAchievementStore.getState().currentLevel;
-  }, []);
+    return levelProgression?.currentLevel || 1;
+  }, [levelProgression]);
 
   /**
    * Get XP to next level
    */
   const getXPToNextLevel = useCallback(() => {
-    return useAchievementStore.getState().xpToNextLevel;
-  }, []);
+    return levelProgression?.xpToNextLevel || 0;
+  }, [levelProgression]);
+
+  /**
+   * Get XP for current level (base XP needed to reach current level)
+   */
+  const getXPForCurrentLevel = useCallback(() => {
+    return levelProgression?.xpForCurrentLevel || 0;
+  }, [levelProgression]);
+
+  /**
+   * Get current XP within level
+   */
+  const getCurrentXP = useCallback(() => {
+    return levelProgression?.currentXP || 0;
+  }, [levelProgression]);
+
+  /**
+   * Get progress percentage to next level
+   */
+  const getProgressPercentage = useCallback(() => {
+    return levelProgression?.progressPercentage || 0;
+  }, [levelProgression]);
 
   /**
    * Auto-fetch data on mount
@@ -382,6 +408,7 @@ export function useAchievements() {
     longestStreak,
     isLoading,
     error,
+    levelProgression,
 
     // Achievement actions
     fetchAchievements,
@@ -390,12 +417,23 @@ export function useAchievements() {
     getLockedAchievements,
     getAchievementsByCategory,
 
-    // XP actions
+    // XP actions and getters
     fetchXPHistory,
     gainXP,
     getTotalXP,
     getCurrentLevel,
     getXPToNextLevel,
+    getXPForCurrentLevel,
+    getCurrentXP,
+    getProgressPercentage,
+
+    // Computed XP values (for convenience)
+    totalXP: getTotalXP(),
+    currentLevel: getCurrentLevel(),
+    currentXP: getCurrentXP(),
+    xpToNextLevel: getXPToNextLevel(),
+    xpForCurrentLevel: getXPForCurrentLevel(),
+    progressPercentage: getProgressPercentage(),
 
     // Skill actions
     fetchSkills,

@@ -19,7 +19,6 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-  TabsContent,
   Select,
   SelectTrigger,
   SelectValue,
@@ -65,8 +64,8 @@ export function AchievementGrid({
   const categories = React.useMemo(() => {
     const cats = new Set<string>();
     achievements.forEach((achievement) => {
-      if (achievement.category) {
-        cats.add(achievement.category);
+      if (achievement.achievement.category) {
+        cats.add(achievement.achievement.category);
       }
     });
     return ["all", ...Array.from(cats).sort()];
@@ -78,7 +77,7 @@ export function AchievementGrid({
 
     // Filter by category
     if (selectedCategory !== "all") {
-      filtered = filtered.filter((a) => a.category === selectedCategory);
+      filtered = filtered.filter((a) => a.achievement.category === selectedCategory);
     }
 
     // Filter by unlock status
@@ -100,17 +99,17 @@ export function AchievementGrid({
           return 0;
 
         case "name":
-          return a.name.localeCompare(b.name);
+          return a.achievement.name.localeCompare(b.achievement.name);
 
         case "rarity":
           const rarityOrder = { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4 };
-          const aRarity = rarityOrder[a.rarity?.toLowerCase() as keyof typeof rarityOrder] ?? 0;
-          const bRarity = rarityOrder[b.rarity?.toLowerCase() as keyof typeof rarityOrder] ?? 0;
+          const aRarity = rarityOrder[a.achievement.rarity?.toLowerCase() as keyof typeof rarityOrder] ?? 0;
+          const bRarity = rarityOrder[b.achievement.rarity?.toLowerCase() as keyof typeof rarityOrder] ?? 0;
           return bRarity - aRarity;
 
         case "progress":
-          const aProgress = a.unlockedAt ? 100 : ((a.progress || 0) / (a.target || 100)) * 100;
-          const bProgress = b.unlockedAt ? 100 : ((b.progress || 0) / (b.target || 100)) * 100;
+          const aProgress = a.unlockedAt ? 100 : ((a.progress || 0) / (a.achievement.requirement.value || 100)) * 100;
+          const bProgress = b.unlockedAt ? 100 : ((b.progress || 0) / (b.achievement.requirement.value || 100)) * 100;
           return bProgress - aProgress;
 
         default:

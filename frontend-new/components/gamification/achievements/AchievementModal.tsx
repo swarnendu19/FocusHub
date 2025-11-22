@@ -7,7 +7,6 @@
 
 "use client";
 
-import * as React from "react";
 import { cn } from "@/utils";
 import { formatDate } from "@/utils/format";
 import {
@@ -51,7 +50,7 @@ export function AchievementModal({
 
   const isUnlocked = achievement.unlockedAt !== null;
   const progress = achievement.progress || 0;
-  const target = achievement.target || 100;
+  const target = achievement.achievement.requirement.value || 100;
   const progressPercentage = (progress / target) * 100;
 
   return (
@@ -108,19 +107,19 @@ export function AchievementModal({
           {/* Title & Description */}
           <div className="text-center space-y-2">
             <div className="flex items-center justify-center gap-2">
-              <DialogTitle className="text-2xl">{achievement.name}</DialogTitle>
-              {achievement.rarity && (
+              <DialogTitle className="text-2xl">{achievement.achievement.name}</DialogTitle>
+              {achievement.achievement.rarity && (
                 <Badge
                   variant={isUnlocked ? "default" : "outline"}
-                  className={getRarityColor(achievement.rarity)}
+                  className={getRarityColor(achievement.achievement.rarity)}
                 >
-                  {achievement.rarity}
+                  {achievement.achievement.rarity}
                 </Badge>
               )}
             </div>
 
             <DialogDescription className="text-base">
-              {achievement.description}
+              {achievement.achievement.description}
             </DialogDescription>
           </div>
 
@@ -200,88 +199,67 @@ export function AchievementModal({
             </div>
           )}
 
-          {/* Requirements Section */}
-          {achievement.requirements && achievement.requirements.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-[#1C1C1C] dark:text-white">
-                Requirements
-              </h3>
-              <ul className="space-y-2">
-                {achievement.requirements.map((requirement, index) => (
-                  <li
-                    key={index}
-                    className="flex items-start gap-2 text-sm text-[#757373]"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={cn(
-                        "h-4 w-4 flex-shrink-0 mt-0.5",
-                        isUnlocked ? "text-green-600" : "text-[#757373]"
-                      )}
-                    >
-                      {isUnlocked ? (
-                        <>
-                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                          <polyline points="22 4 12 14.01 9 11.01" />
-                        </>
-                      ) : (
-                        <circle cx="12" cy="12" r="10" />
-                      )}
-                    </svg>
-                    <span>{requirement}</span>
-                  </li>
-                ))}
-              </ul>
+          {/* Requirements Section - shows requirement details */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-[#1C1C1C] dark:text-white">
+              Requirements
+            </h3>
+            <div className="flex items-start gap-2 text-sm text-[#757373]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={cn(
+                  "h-4 w-4 flex-shrink-0 mt-0.5",
+                  isUnlocked ? "text-green-600" : "text-[#757373]"
+                )}
+              >
+                {isUnlocked ? (
+                  <>
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </>
+                ) : (
+                  <circle cx="12" cy="12" r="10" />
+                )}
+              </svg>
+              <span>
+                {achievement.achievement.requirement.type}: {target} {achievement.achievement.requirement.unit || 'required'}
+              </span>
             </div>
-          )}
+          </div>
 
           {/* Rewards Section */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-[#1C1C1C] dark:text-white">
               Rewards
             </h3>
-            <div className="grid grid-cols-2 gap-3">
-              {achievement.xpReward && (
-                <div className="rounded-lg border-2 border-[#757373]/40 p-3 text-center">
-                  <p className="text-2xl font-bold text-[#1C1C1C] dark:text-white">
-                    +{achievement.xpReward}
+            <div className="flex justify-center">
+              {achievement.achievement.xpReward && (
+                <div className="rounded-lg border-2 border-[#757373]/40 p-4 text-center">
+                  <p className="text-3xl font-bold text-[#1C1C1C] dark:text-white">
+                    +{achievement.achievement.xpReward}
                   </p>
-                  <p className="text-xs text-[#757373]">XP</p>
-                </div>
-              )}
-
-              {achievement.skillPoints && (
-                <div className="rounded-lg border-2 border-[#757373]/40 p-3 text-center">
-                  <p className="text-2xl font-bold text-[#1C1C1C] dark:text-white">
-                    +{achievement.skillPoints}
-                  </p>
-                  <p className="text-xs text-[#757373]">Skill Points</p>
+                  <p className="text-sm text-[#757373]">XP Reward</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Category & Tags */}
-          <div className="flex flex-wrap items-center gap-2">
-            {achievement.category && (
+          {/* Category */}
+          {achievement.achievement.category && (
+            <div className="flex justify-center">
               <Badge variant="outline" className="capitalize">
-                {achievement.category}
+                {achievement.achievement.category}
               </Badge>
-            )}
-            {achievement.tags?.map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Footer Actions */}
